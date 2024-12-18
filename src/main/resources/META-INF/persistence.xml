@@ -14,6 +14,7 @@
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/demo"/>
             <property name="jakarta.persistence.jdbc.user" value="user"/>
             <property name="jakarta.persistence.jdbc.password" value="password"/>
+            <property name="jakarta.persistence.query.sql-dialect" value="org.hibernate.dialect.MySQLDialect" />
             <!-- Automatically export the schema -->
             <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
             <!-- Echo all executed SQL to console -->
