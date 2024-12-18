@@ -11,7 +11,8 @@ CREATE TABLE city
 (
     cityId         INT AUTO_INCREMENT PRIMARY KEY,
     cityName       VARCHAR(255) NOT NULL,
-    city_countryId INT -- Vi kommer att uppdatera detta senare
+    city_countryId INT, -- Vi kommer att uppdatera detta senare
+    FOREIGN KEY (city_countryId) REFERENCES country (countryId)
 );
 
 -- Skapa tabell för lake (sjöar)
@@ -127,4 +128,4 @@ CREATE INDEX idx_city_name ON city (cityName);
 CREATE INDEX idx_city_name ON lake (lakeName);
 
 SELECT *
-FROM country;
+FROM city;
