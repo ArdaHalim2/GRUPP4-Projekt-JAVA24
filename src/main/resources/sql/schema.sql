@@ -1,16 +1,22 @@
+-- DROP TABLE city;
+-- DROP TABLE lake;
+-- DROP TABLE test;
+-- DROP TABLE student;
+-- DROP TABLE country;
+
 -- Skapa tabell för country först (utan foreign key till city)
 CREATE TABLE country
 (
     countryId      INT AUTO_INCREMENT PRIMARY KEY,
     countryName    VARCHAR(255) UNIQUE NOT NULL,
-    countryCapital INT -- Vi kommer att uppdatera detta senare
+    countryCapital VARCHAR(255) NOT NULL -- Vi kommer att uppdatera detta senare
 );
 
 -- Skapa tabell för city (städer) utan foreign key till country
 CREATE TABLE city
 (
     cityId         INT AUTO_INCREMENT PRIMARY KEY,
-    cityName       VARCHAR(255) NOT NULL,
+    cityName       VARCHAR(255) NOT NULL UNIQUE,
     city_countryId INT, -- Vi kommer att uppdatera detta senare
     FOREIGN KEY (city_countryId) REFERENCES country (countryId)
 );
@@ -19,7 +25,7 @@ CREATE TABLE city
 CREATE TABLE lake
 (
     lakeId         INT AUTO_INCREMENT PRIMARY KEY,
-    lakeName       VARCHAR(255) NOT NULL,
+    lakeName       VARCHAR(255) NOT NULL UNIQUE,
     lake_countryId INT, -- Foreign key som kopplar till country
     FOREIGN KEY (lake_countryId) REFERENCES country (countryId)
 );
@@ -29,21 +35,40 @@ CREATE TABLE student
 (
     studentId          INT AUTO_INCREMENT PRIMARY KEY,
     studentName        VARCHAR(255) NOT NULL,
-    studentDateOfBirth DATE
+    studentDateOfBirth DATE NOT NULL
 );
 
 -- Skapa tabell för test
 CREATE TABLE test
 (
     testId           INT AUTO_INCREMENT PRIMARY KEY,
-    testName         VARCHAR(255) NOT NULL,
-    testCategory     VARCHAR(100),
-    testMaxScore     INT,
+    testCategory     VARCHAR(255) NOT NULL,
+    testMaxScore     INT DEFAULT 0,
     testStudentScore INT DEFAULT 0,
-    testDate         DATE,
+    testDate         DATE NOT NULL,
     test_studentId   INT, -- Foreign key som kopplar till student
     FOREIGN KEY (test_studentId) REFERENCES student (studentId)
 );
+
+
+
+-- Lägg till 15 exempeldata för länder (countryCapitaL kommer att uppdateras senare)
+INSERT INTO country (countryName, countryCapital)
+VALUES ('Frankrike', 'Paris'),
+       ('Storbritannien', 'London'),
+       ('Spanien', 'Madrid'),
+       ('Italien', 'Rom'),
+       ('Grekland', 'Aten'),
+       ('Nederländerna', 'Amsterdam'),
+       ('Belgien', 'Bryssel'),
+       ('Schweiz', 'Bern'),
+       ('Polen', 'Warszawa'),
+       ('Norge', 'Oslo'),
+       ('Portugal', 'Lisabon'),
+       ('Tjeckien', 'Prag'),
+       ('Sverige', 'Stockholm'),
+       ('Ungern', 'Budapest'),
+       ('Finland', 'Helsingfors');
 
 -- Lägg till 15 exempeldata för städer (endast huvudstäder)
 INSERT INTO city (cityName, city_countryId)
@@ -63,24 +88,6 @@ VALUES ('Paris', 1),
        ('Budapest', 14),
        ('Helsingfors', 15);
 
--- Lägg till 15 exempeldata för länder (countryCapitaL kommer att uppdateras senare)
-INSERT INTO country (countryName)
-VALUES ('Frankrike'),
-       ('Storbritannien'),
-       ('Spanien'),
-       ('Italien'),
-       ('Grekland'),
-       ('Nederländerna'),
-       ('Belgien'),
-       ('Schweiz'),
-       ('Polen'),
-       ('Norge'),
-       ('Portugal'),
-       ('Tjeckien'),
-       ('Sverige'),
-       ('Ungern'),
-       ('Finland');
-
 -- Lägg till 15 sjöar med referens till land via lake_countryId
 INSERT INTO lake (lakeName, lake_countryId)
 VALUES ('Genèvesjön', 1),           -- Frankrike
@@ -99,33 +106,8 @@ VALUES ('Genèvesjön', 1),           -- Frankrike
        ('Saimaa', 15);              -- Finland
 
 
--- Uppdatera länder med huvudstäder
-UPDATE country SET countryCapitaL = 1 WHERE countryName = 'Frankrike';  -- Paris
-UPDATE country SET countryCapitaL = 2 WHERE countryName = 'Storbritannien';  -- London
-UPDATE country SET countryCapitaL = 3 WHERE countryName = 'Spanien';  -- Madrid
-UPDATE country SET countryCapitaL = 4 WHERE countryName = 'Italien';  -- Rom
-UPDATE country SET countryCapitaL = 5 WHERE countryName = 'Grekland';  -- Aten
-UPDATE country SET countryCapitaL = 6 WHERE countryName = 'Nederländerna';  -- Amsterdam
-UPDATE country SET countryCapitaL = 7 WHERE countryName = 'Belgien';  -- Brussels
-UPDATE country SET countryCapitaL = 8 WHERE countryName = 'Schweiz';  -- Bern
-UPDATE country SET countryCapitaL = 9 WHERE countryName = 'Polen';  -- Warszawa
-UPDATE country SET countryCapitaL = 10 WHERE countryName = 'Norge';  -- Oslo
-UPDATE country SET countryCapitaL = 11 WHERE countryName = 'Portugal';  -- Lisabon
-UPDATE country SET countryCapitaL = 12 WHERE countryName = 'Tjeckien';  -- Prag
-UPDATE country SET countryCapitaL = 13 WHERE countryName = 'Sverige';  -- Stockholm
-UPDATE country SET countryCapitaL = 14 WHERE countryName = 'Ungern';  -- Budapest
-UPDATE country SET countryCapitaL = 15 WHERE countryName = 'Finland';  -- Helsingfors
-
-
 
 -- Skapa index för att förbättra sökningar på viktiga kolumner
-CREATE INDEX idx_studentId ON test (test_studentId);
-CREATE INDEX idx_countryId ON lake (lake_countryId);
-CREATE INDEX idx_city_countryId ON city (city_countryId);
-
 CREATE INDEX idx_country_name ON country (countryName);
 CREATE INDEX idx_city_name ON city (cityName);
 CREATE INDEX idx_city_name ON lake (lakeName);
-
-SELECT *
-FROM city;
