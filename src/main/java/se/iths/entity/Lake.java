@@ -56,4 +56,9 @@ public class Lake {
                 '}';
     }
 
+    public void setLakeName(String lakeName) {
+    }
+
+    public void setLakeCountry(Country country) {
+    }
 }
