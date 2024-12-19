@@ -1,4 +1,167 @@
 package se.iths.repositories;
 
+import se.iths.entity.Student;
+
+import static se.iths.repositories.JPAUtil.*;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Class for handling all transactions between the student table in the database and
+ * the application.
+ */
 public class StudentRepo {
+
+    /**
+     * Gets all students from the database. Use like:
+     *      var listOfAllStudents = studentRepo.getAllStudentsFromDatabase();
+     *      listOfAllStudents.ifPresent(student -> { // do something with each student. });
+     * @return Optional list of students if the query succeeded, else an empty Optional.
+     */
+    public Optional<List<Student>> getAllStudentsFromDatabase() {
+
+        try {
+            var allStudentsList = getEntityManager()
+                    .createQuery("SELECT s FROM Student s", Student.class)
+                    .getResultList();
+
+            return Optional.ofNullable(allStudentsList);
+
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Gets a student from the database by their id. Use like:
+     *      var studentById = studentRepo.getStudentByIdFromDatabase(12);
+     *         studentById.ifPresent(student -> {
+     *             // do something with the student.
+     *         });
+     * @param id int
+     * @return Optional of student if the query succeeded, else an empty Optional.
+     */
+    public Optional<Student> getStudentByIdFromDatabase(int id) {
+
+        try {
+            var student = getEntityManager()
+                    .find(Student.class, id);
+
+            return Optional.ofNullable(student);
+
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Gets a student from the database by their name and date of birth. Use like:
+     *      var studentByNameAndDateOfBirth = studentRepo.getStudentByNameAndDateOfBirthFromDatabase("Anna", LocalDate.of(2003, 12, 24));
+     *         studentByNameAndDateOfBirth.ifPresent(student -> {
+     *             // do something with the student.
+     *         });
+     * @param name String
+     * @param dateOfBirth LocalDate
+     * @return Optional of student if the query succeeded, else an empty Optional.
+     */
+    public Optional<Student> getStudentByNameAndDateOfBirthFromDatabase(String name, LocalDate dateOfBirth) {
+
+        try {
+            var student = getEntityManager()
+                    .createQuery("SELECT s FROM Student s WHERE s.studentName = :name AND s.studentDateOfBirth = :dateOfBirth", Student.class)
+                    .setParameter("name", name)
+                    .setParameter("dateOfBirth", dateOfBirth)
+                    .getSingleResult();
+
+            return Optional.ofNullable(student);
+
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Adds a detached student entity (and all its child entities since cascade = CascadeType.ALL) to the database.
+     * Use like:
+     *         Student student = new Student("Anna Andersson", LocalDate.of(2003, 12, 24));
+     *         boolean studentWasAddedToDatabase = studentRepo.persistStudentToDatabase(student);
+     *         if(studentWasAddedToDatabase){
+     *             System.out.println("Student added to the database");
+     *         } else {
+     *             System.out.println("Student not added to the database");
+     *         }
+     * @param student Student
+     * @return boolean: true if the student was persisted to the database, else false.
+     */
+    public boolean persistStudentToDatabase(Student student) {
+
+        try {
+            inTransaction(entityManager -> {
+                entityManager.persist(student);
+            });
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    /**
+     * Deletes a managed student entity (and all its child entities since cascade = CascadeType.ALL) from the database.
+     * Use like:
+     *      var studentById = studentRepo.getStudentByIdFromDatabase(12);
+     *         if(studentById.isPresent()){
+     *             var studentWasRemovedFromDatabase = studentRepo.removeStudentFromDatabase(studentById.get());
+     *             if(studentWasRemovedFromDatabase){
+     *                 System.out.println("Student removed from the database");
+     *             } else {
+     *                 System.out.println("Student not removed from the database");
+     *             }
+     *         } else {
+     *             System.out.prinln("Could not find student in database.");
+     *         }
+     * @param student Student
+     * @return boolean: true if the student was persisted to the database, else false.
+     */
+    public boolean removeStudentFromDatabase(Student student) {
+
+        try {
+            inTransaction(entityManager -> {
+                var studentToRemove = entityManager.find(Student.class, student.getId());
+                entityManager.remove(studentToRemove);
+            });
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    /**
+     * Updates a detached student entity (and all its child entities since cascade = CascadeType.ALL) in the database.
+     * Use like:
+     *          var studentById = studentRepo.getStudentByIdFromDatabase(12);
+     *         if(studentById.isPresent()){
+     *             boolean studentWasMergedInDatabase = studentRepo.mergeStudentInDatabase(studentById.get());
+     *             if(studentWasMergedInDatabase){
+     *                 System.out.println("Student was updated in the database!");
+     *             } else {
+     *                 System.out.println("Student was not updated in the database!");
+     *             }
+     *         }
+     * @param student Student
+     * @return boolean: true if the student was merged into the database, else false.
+     */
+    public boolean mergeStudentInDatabase(Student student) {
+
+        try {
+            inTransaction(entityManager -> {
+                entityManager.merge(student);
+            });
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
 }
