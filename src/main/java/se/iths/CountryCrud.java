@@ -51,6 +51,8 @@ public class CountryCrud {
         country.setName(countryName);
         country.setCapital(countryCapital);
 
+        
+
         if (countryRepo.persistCountryToDatabase(country)) {
             System.out.println("Country was added to the database");
         } else {

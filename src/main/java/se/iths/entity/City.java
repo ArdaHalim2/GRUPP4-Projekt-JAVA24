@@ -20,8 +20,9 @@ public class City {
     public City() {
     }
 
-    public City(String name) {
+    public City(String name, Country country) {
         this.name = name;
+        this.country = country;
     }
 
     public Integer getId() {
