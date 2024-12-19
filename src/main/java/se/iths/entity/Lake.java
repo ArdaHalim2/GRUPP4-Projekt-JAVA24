@@ -11,11 +11,17 @@ public class Lake {
     private Integer id;
 
     @Column(name = "lakeName", nullable = false)
-    private String lakeName;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "lake_countryId", nullable = false)
-    private Country lakeCountry;
+    private Country country;
+
+    public Lake(){}
+
+    public Lake(String name){
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -25,27 +31,27 @@ public class Lake {
         this.id = id;
     }
 
-    public String getLakeName() {
-        return lakeName;
+    public String getName() {
+        return name;
     }
 
-    public void setLakeName(String lakeName) {
-        this.lakeName = lakeName;
+    public void setName(String lakeName) {
+        this.name = lakeName;
     }
 
-    public Country getLakeCountry() {
-        return lakeCountry;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setLakeCountry(Country lakeCountry) {
-        this.lakeCountry = lakeCountry;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override
     public String toString() {
         return "Lake{" +
                 "id=" + id +
-                ", lakeName='" + lakeName + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 

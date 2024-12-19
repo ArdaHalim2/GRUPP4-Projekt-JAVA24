@@ -1,29 +1,41 @@
 package se.iths.repositories;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
+import static se.iths.repositories.JPAUtil.*;
 import se.iths.entity.Country;
-
 import java.util.List;
-import java.util.Random;
+import java.util.Optional;
 
 public class CountryRepo {
 
-    public List<Country> getCountriesWithCapitals(int count) {
-        EntityManager em = JPAUtil.getEntityManager();
+    public Optional<List<Country>> getRandomCountries(int count) {
         try {
-            String query = "SELECT c FROM Country c WHERE c.countryCapital IS NOT NULL";
-            TypedQuery<Country> typedQuery = em.createQuery(query, Country.class);
-            List<Country> countries = typedQuery.getResultList();
+            var randomCountries = getEntityManager()
+                    .createNativeQuery("SELECT * FROM country ORDER BY RAND() LIMIT :amount", Country.class)
+                    .setParameter("amount", count)
+                    .getResultList();
 
-            Random rand = new Random();
-            while (countries.size() > count) {
-                countries.remove(rand.nextInt(countries.size()));
-            }
-            return countries;
-        } finally {
-            em.close();
+            return Optional.of(randomCountries);
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 
+//        public List<Country> getRandomCountries(int count) {
+//        EntityManager em = JPAUtil.getEntityManager();
+//
+//            try {
+//
+//                String query = "SELECT c FROM Country c WHERE c.countryCapital IS NOT NULL";
+//                TypedQuery<Country> typedQuery = em.createQuery(query, Country.class);
+//                List<Country> countries = typedQuery.getResultList();
+//
+//                Random rand = new Random();
+//                while (countries.size() > count) {
+//                    countries.remove(rand.nextInt(countries.size()));
+//                }
+//                return countries;
+//        } finally {
+//            em.close();
+//        }
+//    }
 }

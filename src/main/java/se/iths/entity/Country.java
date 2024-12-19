@@ -2,8 +2,8 @@ package se.iths.entity;
 
 import jakarta.persistence.*;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "country", schema = "demo")
@@ -13,16 +13,20 @@ public class Country {
     private Integer id;
 
     @Column(name = "countryName", nullable = false)
-    private String countryName;
+    private String name;
 
     @Column(name = "countryCapital")
-    private Integer countryCapital;
+    private String capital;
 
     @OneToMany(mappedBy = "cityCountry", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<City> cities = new LinkedHashSet<>();
+    private List<City> cities = new ArrayList<>();
 
     @OneToMany(mappedBy = "lakeCountry", fetch = FetchType.LAZY)
-    private Set<Lake> lakes = new LinkedHashSet<>();
+    private List<Lake> lakes = new ArrayList<>();
+
+    public Country(){}
+
+    public Country(String name, String capital) {}
 
     public Integer getId() {
         return id;
@@ -32,44 +36,42 @@ public class Country {
         this.id = id;
     }
 
-    public String getCountryName() {
-        return countryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getCountryCapital() {
-        return countryCapital;
+    public String getCapital() {
+        return capital;
     }
 
-    public void setCountryCapital(Integer countryCapital) {
-        this.countryCapital = countryCapital;
+    public void setCapital(String capital) {
+        this.capital = capital;
     }
 
-    public Set<City> getCities() {
+    public List<City> getCities() {
         return cities;
     }
 
-    public void setCities(Set<City> cities) {
+    public void setCities(List<City> cities) {
         this.cities = cities;
     }
 
-    public Set<Lake> getLakes() {
+    public List<Lake> getLakes() {
         return lakes;
     }
 
-    public void setLakes(Set<Lake> lakes) {
-        this.lakes = lakes;
-    }
+    public void setLakes(List<Lake> lakes) { this.lakes = lakes; }
 
     @Override
     public String toString() {
         return "Country{" +
                 "id=" + id +
-                ", countryName='" + countryName + '\'' +
-                ", countryCapital=" + countryCapital +
+                ", countryName='" + name + '\'' +
+                ", countryCapital=" + capital +
                 ", cities=" + cities +
                 ", lakes=" + lakes +
                 '}';

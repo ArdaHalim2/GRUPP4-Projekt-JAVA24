@@ -2,7 +2,6 @@ package se.iths.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
-
 import java.time.LocalDate;
 
 @Entity
@@ -12,25 +11,22 @@ public class Test {
     @Column(name = "testId", nullable = false)
     private Integer id;
 
-    @Column(name = "testName", nullable = false)
-    private String testName;
-
-    @Column(name = "testCategory", length = 100)
-    private String testCategory;
+    @Column(name = "testCategory")
+    private String category;
 
     @Column(name = "testMaxScore")
-    private Integer testMaxScore;
+    private Integer maxScore;
 
     @ColumnDefault("0")
     @Column(name = "testStudentScore")
-    private Integer testStudentScore;
+    private Integer studentScore;
 
     @Column(name = "testDate")
-    private LocalDate testDate;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "test_studentId", nullable = false)
-    private Student testStudent;
+    private Student student;
 
     public Integer getId() {
         return id;
@@ -40,63 +36,54 @@ public class Test {
         this.id = id;
     }
 
-    public String getTestName() {
-        return testName;
+    public String getCategory() {
+        return category;
     }
 
-    public void setTestName(String testName) {
-        this.testName = testName;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getTestCategory() {
-        return testCategory;
+    public Integer getMaxScore() {
+        return maxScore;
     }
 
-    public void setTestCategory(String testCategory) {
-        this.testCategory = testCategory;
+    public void setMaxScore(Integer maxScore) {
+        this.maxScore = maxScore;
     }
 
-    public Integer getTestMaxScore() {
-        return testMaxScore;
+    public Integer getStudentScore() {
+        return studentScore;
     }
 
-    public void setTestMaxScore(Integer testMaxScore) {
-        this.testMaxScore = testMaxScore;
+    public void setStudentScore(Integer studentScore) {
+        this.studentScore = studentScore;
     }
 
-    public Integer getTestStudentScore() {
-        return testStudentScore;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTestStudentScore(Integer testStudentScore) {
-        this.testStudentScore = testStudentScore;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public LocalDate getTestDate() {
-        return testDate;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setTestDate(LocalDate testDate) {
-        this.testDate = testDate;
-    }
-
-    public Student getTestStudent() {
-        return testStudent;
-    }
-
-    public void setTestStudent(Student testStudent) {
-        this.testStudent = testStudent;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     @Override
     public String toString() {
         return "Test{" +
                 "id=" + id +
-                ", testName='" + testName + '\'' +
-                ", testCategory='" + testCategory + '\'' +
-                ", testMaxScore=" + testMaxScore +
-                ", testStudentScore=" + testStudentScore +
-                ", testDate=" + testDate +
+                ", category='" + category + '\'' +
+                ", maxScore=" + maxScore +
+                ", studentScore=" + studentScore +
+                ", date=" + date +
                 '}';
     }
 }
