@@ -19,7 +19,8 @@ public class Student {
     @OneToMany(mappedBy = "testStudent", cascade = CascadeType.ALL)
     private List<Test> tests = new ArrayList<>();
 
-    public Student() {}
+    public Student() {
+    }
 
     public Student(String name) {
         this.name = name;

@@ -2,6 +2,7 @@ package se.iths.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+
 import java.time.LocalDate;
 
 @Entity

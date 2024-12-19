@@ -17,9 +17,10 @@ public class Lake {
     @JoinColumn(name = "lake_countryId", nullable = false)
     private Country country;
 
-    public Lake(){}
+    public Lake() {
+    }
 
-    public Lake(String name){
+    public Lake(String name) {
         this.name = name;
     }
 

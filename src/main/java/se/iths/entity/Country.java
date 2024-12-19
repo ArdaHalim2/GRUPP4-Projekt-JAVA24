@@ -24,9 +24,11 @@ public class Country {
     @OneToMany(mappedBy = "lakeCountry", fetch = FetchType.LAZY)
     private List<Lake> lakes = new ArrayList<>();
 
-    public Country(){}
+    public Country() {
+    }
 
-    public Country(String name, String capital) {}
+    public Country(String name, String capital) {
+    }
 
     public Integer getId() {
         return id;
@@ -64,7 +66,9 @@ public class Country {
         return lakes;
     }
 
-    public void setLakes(List<Lake> lakes) { this.lakes = lakes; }
+    public void setLakes(List<Lake> lakes) {
+        this.lakes = lakes;
+    }
 
     @Override
     public String toString() {
