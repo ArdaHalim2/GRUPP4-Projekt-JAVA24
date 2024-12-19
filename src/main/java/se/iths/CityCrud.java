@@ -1,13 +1,8 @@
 package se.iths;
 
 import se.iths.entity.City;
-import se.iths.entity.Student;
 import se.iths.repositories.CityRepo;
-
-import java.util.Optional;
 import java.util.Scanner;
-
-import static se.iths.Main.printStartMenu;
 
 public class CityCrud {
 
@@ -38,10 +33,10 @@ public class CityCrud {
             switch (userAnswer) {
                 case "1" -> addCity();
                 case "2" -> updateCity();
-                case "3" -> deleteStudent();
-                case "4" -> showAllStudents();
+                case "3" -> deleteCity();
+                case "4" -> showAllCities();
                 case "0" -> runMenu = false;
-                default -> System.out.println("Invalid input");
+                default -> System.out.println("Invalid menu choice. Please try again.");
             }
         }
     }
@@ -50,7 +45,11 @@ public class CityCrud {
 
         System.out.println("Enter city name: ");
         String cityName = scanner.nextLine();
-        City city = new City(cityName);
+
+        System.out.println("Enter city country id: ");
+        int cityCountry = scanner.nextInt();
+        scanner.nextLine();
+        City city = new City(cityName, new);
 
         if (cityRepo.persistCityToDatabase(city)) {
             System.out.println("City was added to the database");
@@ -65,56 +64,53 @@ public class CityCrud {
         int cityId = scanner.nextInt();
         scanner.nextLine();
 
-        var city = studentRepo.getStudentByIdFromDatabase(studentId);
+        var cityOptional = cityRepo.getCityByIdFromDatabase(cityId);
 
-        if (studentOptional.isPresent()) {
-            Student student = studentOptional.get();
+        if (cityOptional.isPresent()) {
 
-            System.out.println("Enter new name for the student: ");
-            String updateStudentName = scanner.nextLine();
+            var city = cityOptional.get();
 
-            student.setName(updateStudentName);
+            System.out.println("Enter new name for the city: ");
+            String updateCityName = scanner.nextLine();
 
-            boolean isUpdated = studentRepo.mergeStudentInDatabase(student);
+            city.setName(updateCityName);
+
+            boolean isUpdated = cityRepo.mergeCityInDatabase(city);
 
             if (isUpdated) {
-                System.out.println("Student was updated in the database");
+                System.out.println("City was updated in the database");
             } else {
-                System.out.println("Student was not updated in the database");
+                System.out.println("City was not updated in the database");
             }
         } else {
-            System.out.println("No student was found wit the name: " + studentId);
+            System.out.println("No city was found wit the id: " + cityId);
         }
     }
 
-    public void deleteStudent() {
-        System.out.println("Enter student ID to delete: ");
+    public void deleteCity() {
+        System.out.println("Enter city ID to delete: ");
         int idToDelete = scanner.nextInt();
 
-        var studentToDelete = studentRepo.getStudentByIdFromDatabase(idToDelete);
+        var cityOptional = cityRepo.getCityByIdFromDatabase(idToDelete);
 
-        if (studentToDelete.isPresent()) {
-            boolean wasDeleted = studentRepo.removeStudentFromDatabase(studentToDelete.get());
+        if (cityOptional.isPresent()) {
+            boolean wasDeleted = cityRepo.removeCityFromDatabase(cityOptional.get());
 
             if (wasDeleted) {
-                System.out.println("Student " + idToDelete + " was deleted");
+                System.out.println("City with id: " + idToDelete + " was deleted");
             } else {
-                System.out.println("Failed to remove student " + idToDelete);
+                System.out.println("Failed to delete city with id: " + idToDelete);
             }
         } else {
-            System.out.println("No student was found wit the name: " + idToDelete);
+            System.out.println("No city was found with the id: " + idToDelete);
         }
     }
 
-    public void showAllStudents() {
-        studentRepo.getAllStudentsFromDatabase()
+    public void showAllCities() {
+        cityRepo.getAllCitiesFromDatabase()
                 .ifPresentOrElse(
-                        students -> students.forEach(System.out::println),
-                        () -> System.out.println("No students found")
+                        city -> city.forEach(System.out::println),
+                        () -> System.out.println("No cities was found.")
                 );
-    }
-
-    public void goBack() {
-        printStartMenu();
     }
 }

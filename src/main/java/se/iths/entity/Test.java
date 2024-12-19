@@ -15,12 +15,13 @@ public class Test {
     @Column(name = "testCategory")
     private String category;
 
+    @ColumnDefault("0")
     @Column(name = "testMaxScore")
-    private Integer maxScore;
+    private int maxScore;
 
     @ColumnDefault("0")
     @Column(name = "testStudentScore")
-    private Integer studentScore;
+    private int studentScore;
 
     @Column(name = "testDate")
     private LocalDate date;
@@ -28,6 +29,10 @@ public class Test {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "test_studentId", nullable = false)
     private Student student;
+
+    public Test(){}
+
+    public Test(String category, int maxScore, LocalDate date, Student student) {}
 
     public Integer getId() {
         return id;
@@ -75,6 +80,10 @@ public class Test {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public void incrementStudentScoreByOne() {
+        studentScore++;
     }
 
     @Override

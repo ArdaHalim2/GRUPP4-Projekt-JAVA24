@@ -3,9 +3,6 @@ package se.iths.repositories;
 import se.iths.entity.Student;
 
 import static se.iths.repositories.JPAUtil.*;
-
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,16 +61,14 @@ public class StudentRepo {
      *             // do something with the student.
      *         });
      * @param name String
-     * @param dateOfBirth LocalDate
      * @return Optional of student if the query succeeded, else an empty Optional.
      */
-    public Optional<Student> getStudentByNameAndDateOfBirthFromDatabase(String name, LocalDate dateOfBirth) {
+    public Optional<Student> getStudentByNameFromDatabase(String name) {
 
         try {
             var student = getEntityManager()
-                    .createQuery("SELECT s FROM Student s WHERE s.studentName = :name AND s.studentDateOfBirth = :dateOfBirth", Student.class)
+                    .createQuery("SELECT s FROM Student s WHERE s.name = :name", Student.class)
                     .setParameter("name", name)
-                    .setParameter("dateOfBirth", dateOfBirth)
                     .getSingleResult();
 
             return Optional.ofNullable(student);

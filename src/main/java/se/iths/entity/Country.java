@@ -18,10 +18,10 @@ public class Country {
     @Column(name = "countryCapital")
     private String capital;
 
-    @OneToMany(mappedBy = "cityCountry", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<City> cities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lakeCountry", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
     private List<Lake> lakes = new ArrayList<>();
 
     public Country() {
