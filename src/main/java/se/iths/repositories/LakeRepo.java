@@ -1,4 +1,4 @@
 package se.iths.repositories;
 
-public class Lakerepo {
+public class LakeRepo {
 }

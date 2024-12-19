@@ -11,11 +11,17 @@ public class City {
     private Integer id;
 
     @Column(name = "cityName", nullable = false)
-    private String cityName;
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "city_countryId", nullable = false)
-    private se.iths.entity.Country cityCountry;
+    private Country country;
+
+    public City(){}
+
+    public City(String name){
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -25,27 +31,27 @@ public class City {
         this.id = id;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getName() {
+        return name;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public se.iths.entity.Country getCityCountry() {
-        return cityCountry;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCityCountry(se.iths.entity.Country cityCountry) {
-        this.cityCountry = cityCountry;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override
     public String toString() {
         return "City{" +
                 "id=" + id +
-                ", cityName='" + cityName + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 

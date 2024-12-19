@@ -34,8 +34,7 @@ CREATE TABLE lake
 CREATE TABLE student
 (
     studentId          INT AUTO_INCREMENT PRIMARY KEY,
-    studentName        VARCHAR(255) NOT NULL,
-    studentDateOfBirth DATE NOT NULL
+    studentName        VARCHAR(255) NOT NULL
 );
 
 -- Skapa tabell för test
@@ -106,6 +105,11 @@ VALUES ('Genèvesjön', 1),           -- Frankrike
        ('Saimaa', 15);              -- Finland
 
 
+INSERT INTO student(studentName)
+VALUES ('Anna'),
+       ('Bertil'),
+       ('Caroline'),
+       ('David');
 
 -- Skapa index för att förbättra sökningar på viktiga kolumner
 CREATE INDEX idx_country_name ON country (countryName);
