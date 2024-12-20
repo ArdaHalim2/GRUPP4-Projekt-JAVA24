@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "lake", schema = "demo")
 public class Lake {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lakeId", nullable = false)
@@ -17,11 +18,11 @@ public class Lake {
     @JoinColumn(name = "lake_countryId", nullable = false)
     private Country country;
 
-    public Lake() {
-    }
+    public Lake() {}
 
-    public Lake(String name) {
+    public Lake(String name, Country country) {
         this.name = name;
+        this.country = country;
     }
 
     public Integer getId() {
@@ -44,9 +45,7 @@ public class Lake {
         return country;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
-    }
+    public void setCountry(Country country) { this.country = country; }
 
     @Override
     public String toString() {
@@ -54,11 +53,5 @@ public class Lake {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public void setLakeName(String lakeName) {
-    }
-
-    public void setLakeCountry(Country country) {
     }
 }

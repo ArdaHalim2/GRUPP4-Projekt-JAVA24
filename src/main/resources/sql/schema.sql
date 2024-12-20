@@ -1,8 +1,8 @@
--- DROP TABLE city;
--- DROP TABLE lake;
--- DROP TABLE test;
--- DROP TABLE student;
--- DROP TABLE country;
+DROP TABLE city;
+DROP TABLE lake;
+DROP TABLE test;
+DROP TABLE student;
+DROP TABLE country;
 
 -- Skapa tabell för country först (utan foreign key till city)
 CREATE TABLE country
@@ -17,7 +17,7 @@ CREATE TABLE city
 (
     cityId         INT AUTO_INCREMENT PRIMARY KEY,
     cityName       VARCHAR(255) NOT NULL UNIQUE,
-    city_countryId INT, -- Vi kommer att uppdatera detta senare
+    city_countryId INT NOT NULL, -- Vi kommer att uppdatera detta senare
     FOREIGN KEY (city_countryId) REFERENCES country (countryId)
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE lake
 (
     lakeId         INT AUTO_INCREMENT PRIMARY KEY,
     lakeName       VARCHAR(255) NOT NULL UNIQUE,
-    lake_countryId INT, -- Foreign key som kopplar till country
+    lake_countryId INT NOT NULL, -- Foreign key som kopplar till country
     FOREIGN KEY (lake_countryId) REFERENCES country (countryId)
 );
 
@@ -45,47 +45,50 @@ CREATE TABLE test
     testMaxScore     INT DEFAULT 0,
     testStudentScore INT DEFAULT 0,
     testDate         DATE NOT NULL,
-    test_studentId   INT, -- Foreign key som kopplar till student
+    test_studentId   INT NOT NULL, -- Foreign key som kopplar till student
     FOREIGN KEY (test_studentId) REFERENCES student (studentId)
 );
 
-
+-- Skapa index för att förbättra sökningar på viktiga kolumner
+CREATE INDEX idx_country_name ON country (countryName);
+CREATE INDEX idx_city_name ON city (cityName);
+CREATE INDEX idx_city_name ON lake (lakeName);
 
 -- Lägg till 15 exempeldata för länder (countryCapitaL kommer att uppdateras senare)
 INSERT INTO country (countryName, countryCapital)
-VALUES ('Frankrike', 'Paris'),
-       ('Storbritannien', 'London'),
-       ('Spanien', 'Madrid'),
-       ('Italien', 'Rom'),
-       ('Grekland', 'Aten'),
-       ('Nederländerna', 'Amsterdam'),
-       ('Belgien', 'Bryssel'),
-       ('Schweiz', 'Bern'),
-       ('Polen', 'Warszawa'),
-       ('Norge', 'Oslo'),
-       ('Portugal', 'Lisabon'),
-       ('Tjeckien', 'Prag'),
-       ('Sverige', 'Stockholm'),
-       ('Ungern', 'Budapest'),
-       ('Finland', 'Helsingfors');
+VALUES ('Frankrike', 'Paris'),          -- 1
+       ('Storbritannien', 'London'),    -- 2
+       ('Spanien', 'Madrid'),           -- 3
+       ('Italien', 'Rom'),              -- 4
+       ('Grekland', 'Aten'),            -- 5
+       ('Nederländerna', 'Amsterdam'),  -- 6
+       ('Belgien', 'Bryssel'),          -- 7
+       ('Schweiz', 'Bern'),             -- 8
+       ('Polen', 'Warszawa'),           -- 9
+       ('Norge', 'Oslo'),               -- 10
+       ('Portugal', 'Lisabon'),         -- 11
+       ('Tjeckien', 'Prag'),            -- 12
+       ('Sverige', 'Stockholm'),        -- 13
+       ('Ungern', 'Budapest'),          -- 14
+       ('Finland', 'Helsingfors');      -- 15
 
 -- Lägg till 15 exempeldata för städer (endast huvudstäder)
 INSERT INTO city (cityName, city_countryId)
-VALUES ('Paris', 1),
-       ('London', 2),
-       ('Madrid', 3),
-       ('Rom', 4),
-       ('Aten', 5),
-       ('Amsterdam', 6),
-       ('Brussels', 7),
-       ('Bern', 8),
-       ('Warszawa', 9),
-       ('Oslo', 10),
-       ('Lisabon', 11),
-       ('Prag', 12),
-       ('Stockholm', 13),
-       ('Budapest', 14),
-       ('Helsingfors', 15);
+VALUES ('Nice', 1),
+       ('Manchester', 2),
+       ('Malaga', 3),
+       ('Milano', 4),
+       ('Korinth', 5),
+       ('Rotterdam', 6),
+       ('Brygge', 7),
+       ('Luzern', 8),
+       ('Krakow', 9),
+       ('Bergen', 10),
+       ('Porto', 11),
+       ('Brno', 12),
+       ('Malmö', 13),
+       ('Debrecen', 14),
+       ('Tammerfors', 15);
 
 -- Lägg till 15 sjöar med referens till land via lake_countryId
 INSERT INTO lake (lakeName, lake_countryId)
@@ -95,6 +98,7 @@ VALUES ('Genèvesjön', 1),           -- Frankrike
        ('Lago di Garda', 4),        -- Italien
        ('Sjöerna i Makedonien', 5), -- Grekland
        ('IJsselmeer', 6),           -- Nederländerna
+       ('Lac de la Plate Taille', 7), -- Belgien
        ('Lago di Neuchâtel', 8),    -- Schweiz
        ('Mazuriska sjöarna', 9),    -- Polen
        ('Oslofjorden', 10),         -- Norge
@@ -109,9 +113,23 @@ INSERT INTO student(studentName)
 VALUES ('Anna'),
        ('Bertil'),
        ('Caroline'),
-       ('David');
+       ('David'),
+       ('Erik');
 
--- Skapa index för att förbättra sökningar på viktiga kolumner
-CREATE INDEX idx_country_name ON country (countryName);
-CREATE INDEX idx_city_name ON city (cityName);
-CREATE INDEX idx_city_name ON lake (lakeName);
+
+INSERT INTO test(testCategory, testMaxScore, testStudentScore, testDate, test_studentId)
+VALUES('capitals', 5,5,'20241220', 1),
+      ('capitals', 5,4,'20241220',2),
+      ('capitals', 5,3,'20241220',3),
+      ('capitals', 5,2,'20241220',4),
+      ('capitals', 5,1,'20241220',5),
+      ('lakes', 5,5,'20241220', 1),
+      ('lakes', 5,4,'20241220',2),
+      ('lakes', 5,3,'20241220',3),
+      ('lakes', 5,2,'20241220',4),
+      ('lakes', 5,1,'20241220',5),
+      ('cities', 5,5,'20241220', 1),
+      ('cities', 5,4,'20241220',2),
+      ('cities', 5,3,'20241220',3),
+      ('cities', 5,2,'20241220',4),
+      ('cities', 5,1,'20241220',5);

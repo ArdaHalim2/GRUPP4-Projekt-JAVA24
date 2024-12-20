@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import static se.iths.repositories.JPAUtil.*;
 
-
 public class CityRepo {
 
     public Optional<List<City>> getRandomCities(int count) {
@@ -16,6 +15,7 @@ public class CityRepo {
                     .getResultList();
 
             return Optional.of(randomCities);
+
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -23,13 +23,13 @@ public class CityRepo {
 
     // Hämta alla städer från databasen
     public Optional<List<City>> getAllCitiesFromDatabase() {
-
         try {
             var cities = getEntityManager().
                     createQuery("SELECT c FROM City c", City.class)
                     .getResultList();
 
             return Optional.of(cities);
+
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -37,9 +37,7 @@ public class CityRepo {
 
     // Hämta en specifik stad från databasen
     public Optional<City> getCityByIdFromDatabase(int id) {
-
         try {
-
             var city = getEntityManager().find(City.class, id);
             return Optional.of(city);
 
@@ -56,6 +54,7 @@ public class CityRepo {
                 entityManager.persist(city);
             });
             return true;
+
         } catch (Exception e){
             return false;
         }
@@ -63,12 +62,14 @@ public class CityRepo {
 
     // Ta bort en stad från databasen
     public boolean removeCityFromDatabase(City city) {
+
         try {
             inTransaction(entityManager -> {
                 City toRemove = entityManager.find(City.class, city.getId());
                 entityManager.remove(toRemove);
             });
             return true;
+
         } catch (Exception e) {
             return false;
         }
@@ -76,11 +77,13 @@ public class CityRepo {
 
     // Uppdatera information om en stad i databasen
     public boolean mergeCityInDatabase(City city) {
+
         try {
             inTransaction(entityManager -> {
                 entityManager.merge(city);
             });
             return true;
+
         } catch (Exception e) {
             return false;
         }

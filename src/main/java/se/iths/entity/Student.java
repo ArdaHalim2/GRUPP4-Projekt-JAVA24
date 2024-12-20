@@ -1,13 +1,13 @@
 package se.iths.entity;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "student", schema = "demo")
 public class Student {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "studentId", nullable = false)
@@ -16,7 +16,7 @@ public class Student {
     @Column(name = "studentName", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Test> tests = new ArrayList<>();
 
     public Student() {

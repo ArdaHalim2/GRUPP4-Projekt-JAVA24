@@ -1,33 +1,35 @@
 package se.iths.entity;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "country", schema = "demo")
 public class Country {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "countryId", nullable = false)
     private Integer id;
 
     @Column(name = "countryName", nullable = false)
     private String name;
 
-    @Column(name = "countryCapital")
+    @Column(name = "countryCapital", nullable = false)
     private String capital;
 
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<City> cities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Lake> lakes = new ArrayList<>();
 
-    public Country() {
-    }
+    public Country() {}
 
     public Country(String name, String capital) {
+        this.name = name;
+        this.capital = capital;
     }
 
     public Integer getId() {

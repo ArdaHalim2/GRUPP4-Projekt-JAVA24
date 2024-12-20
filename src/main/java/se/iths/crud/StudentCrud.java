@@ -1,11 +1,8 @@
-package se.iths;
+package se.iths.crud;
 
 import se.iths.entity.Student;
 import se.iths.repositories.StudentRepo;
-import java.util.Optional;
 import java.util.Scanner;
-
-import static se.iths.Main.printStartMenu;
 
 public class StudentCrud {
 
@@ -17,19 +14,24 @@ public class StudentCrud {
     }
 
     public void studentCrudMenu() {
+
         boolean runMenu = true;
+
         while (runMenu) {
+
             System.out.println("""
+                    
                     CRUD STUDENT
                     
                     1. Add Student
                     2. Update Student
                     3. Delete Student
                     4. Show all students
-                    0. Go back to edit menu
-                    """);
+                    0. Go back to edit menu""");
 
+            System.out.print("Enter your choice: ");
             String userAnswer = scanner.nextLine();
+            System.out.println();
 
             switch (userAnswer) {
                 case "1" -> addStudent();
@@ -37,15 +39,16 @@ public class StudentCrud {
                 case "3" -> deleteStudent();
                 case "4" -> showAllStudents();
                 case "0" -> runMenu = false;
-                default -> System.out.println("Invalid input");
+                default -> System.out.println("Invalid menu choice. Please try again.");
             }
         }
     }
 
     public void addStudent() {
 
-        System.out.println("Enter student name: ");
+        System.out.print("Enter student name: ");
         String studentName = scanner.nextLine();
+
         Student student = new Student(studentName);
 
         if (studentRepo.persistStudentToDatabase(student)) {
@@ -56,49 +59,44 @@ public class StudentCrud {
     }
 
     public void updateStudent() {
-
-        System.out.println("Enter the ID of the student you want to update: ");
+        System.out.print("Enter the id of the student you want to update: ");
         int studentId = scanner.nextInt();
         scanner.nextLine();
 
-        Optional<Student> studentOptional = studentRepo.getStudentByIdFromDatabase(studentId);
+        var studentToUpdate = studentRepo.getStudentByIdFromDatabase(studentId);
 
-        if (studentOptional.isPresent()) {
-            Student student = studentOptional.get();
-
-            System.out.println("Enter new name for the student: ");
+        if (studentToUpdate.isPresent()) {
+            System.out.print("Enter new name for the student: ");
             String updateStudentName = scanner.nextLine();
 
+            Student student = studentToUpdate.get();
             student.setName(updateStudentName);
 
-            boolean isUpdated = studentRepo.mergeStudentInDatabase(student);
-
-            if (isUpdated) {
+            if (studentRepo.mergeStudentInDatabase(student)) {
                 System.out.println("Student was updated in the database");
             } else {
                 System.out.println("Student was not updated in the database");
             }
         } else {
-            System.out.println("No student was found wit the name: " + studentId);
+            System.out.println("No student was found wit the id: " + studentId);
         }
     }
 
     public void deleteStudent() {
-        System.out.println("Enter student ID to delete: ");
+        System.out.print("Enter the id of the student you want to delete: ");
         int idToDelete = scanner.nextInt();
+        scanner.nextLine();
 
         var studentToDelete = studentRepo.getStudentByIdFromDatabase(idToDelete);
 
         if (studentToDelete.isPresent()) {
-            boolean wasDeleted = studentRepo.removeStudentFromDatabase(studentToDelete.get());
-
-            if (wasDeleted) {
-                System.out.println("Student " + idToDelete + " was deleted");
+            if (studentRepo.removeStudentFromDatabase(studentToDelete.get())) {
+                System.out.println("Student with id: " + idToDelete + " was deleted");
             } else {
-                System.out.println("Failed to remove student " + idToDelete);
+                System.out.println("Failed to remove student with id: " + idToDelete);
             }
         } else {
-            System.out.println("No student was found wit the name: " + idToDelete);
+            System.out.println("No student was found with the id: " + idToDelete);
         }
     }
 
@@ -110,7 +108,4 @@ public class StudentCrud {
                 );
     }
 
-    public void goBack() {
-        printStartMenu();
-    }
 }

@@ -5,9 +5,7 @@ import se.iths.repositories.CityRepo;
 import se.iths.repositories.CountryRepo;
 import se.iths.repositories.LakeRepo;
 import se.iths.repositories.TestRepo;
-
 import java.time.LocalDate;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Quiz {
@@ -27,88 +25,126 @@ public class Quiz {
 
     public void quizMenu() {
 
-        Random rand = new Random();
-
-        switch (rand.nextInt(3)) {
-            case 0 -> getCapitalQuestion();
-            case 1 -> getLakeQuestion();
-            case 2 -> getCitiesQuestion();
+        if(currentStudent == null) {
+            System.out.println("Login required.");
+            return;
         }
 
+//        Random rand = new Random();
+//
+//        switch (rand.nextInt(3)) {
+//            case 0 -> getCapitalQuestion();
+//            case 1 -> getLakeQuestion();
+//            case 2 -> getCitiesQuestion();
+//        }
 
+        boolean runMenu = true;
+
+        while(runMenu){
+
+            System.out.println("""
+                
+                QUIZ MENU
+                Choose quiz category:
+                
+                1. Capitals
+                2. Lakes
+                3. Cities
+                0. Go back to main menu""");
+
+            System.out.print("Enter your choice: ");
+            String userChoice = scanner.nextLine();
+            System.out.println();
+
+            switch (userChoice) {
+                case "1" -> getCapitalQuestions(5);
+                case "2" -> getLakeQuestions(5);
+                case "3" -> getCityQuestions(5);
+                case "0" -> runMenu = false;
+                default -> System.out.println("Invalid menu choice. Please try again");
+            }
+        }
     }
 
-    public void getCapitalQuestion() {
+    private void getCapitalQuestions(int amountOfQuestions) {
 
-        Test test = new Test("capitals", 5, LocalDate.now(), currentStudent);
+        int studentScore = 0;
 
-        var randomCountries = countryRepo.getRandomCountries(5);
+        var randomCountries = countryRepo.getRandomCountries(amountOfQuestions);
 
         if (randomCountries.isPresent()) {
+
             for (Country country : randomCountries.get()) {
                 System.out.println("What is the capital of " + country.getName() + "?");
                 String userAnswer = scanner.nextLine();
-                checkRightAnswer(userAnswer, country.getCapital(), test);
+                if(checkForRightAnswer(userAnswer, country.getCapital())){
+                    studentScore++;
+                }
             }
 
-            
-            addTestToDatabase(test);
+            createNewTestAndAddToStudentAndToDatabase("capitals", amountOfQuestions, studentScore);
         }
 
     }
 
-    public void getLakeQuestion() {
+    private void getLakeQuestions(int amountOfQuestions) {
 
-        Test test = new Test("lakes", 5, LocalDate.now(), currentStudent);
+        int studentScore = 0;
 
-        var randomLakes = lakeRepo.getRandomLakes(5);
+        var randomLakes = lakeRepo.getRandomLakes(amountOfQuestions);
 
         if (randomLakes.isPresent()) {
             for (Lake lake : randomLakes.get()) {
                 System.out.println("In which country is the lake " + lake.getName() + " located?");
                 String userAnswer = scanner.nextLine();
-                checkRightAnswer(userAnswer, lake.getCountry().getName(), test);
+                if(checkForRightAnswer(userAnswer, lake.getCountry().getName())){
+                    studentScore++;
+                }
             }
 
-            addTestToDatabase(test);
+            createNewTestAndAddToStudentAndToDatabase("lakes", amountOfQuestions, studentScore);
         }
 
     }
 
-    public void getCitiesQuestion() {
+    private void getCityQuestions(int amountOfQuestions) {
 
-        Test test = new Test("cities", 5, LocalDate.now(), currentStudent);
+        int studentScore = 0;
 
-        var randomCitys = cityRepo.getRandomCities(5);
+        var randomCities = cityRepo.getRandomCities(amountOfQuestions);
 
-        if (randomCitys.isPresent()) {
-            for (City city : randomCitys.get()) {
+        if (randomCities.isPresent()) {
+            for (City city : randomCities.get()) {
                 System.out.println("In what country is " + city.getName() + " located?");
                 String userAnswer = scanner.nextLine();
-                checkRightAnswer(userAnswer, city.getCountry().getName(), test);
+                checkForRightAnswer(userAnswer, city.getCountry().getName());
             }
 
-            addTestToDatabase(test);
+            createNewTestAndAddToStudentAndToDatabase("cities", amountOfQuestions, studentScore);
         }
     }
 
-    public void checkRightAnswer(String userAnswer, String rightAnswer, Test test) {
+    private boolean checkForRightAnswer(String userAnswer, String rightAnswer) {
         if (userAnswer.equals(rightAnswer)) {
-            System.out.println("Right answer!");
-            test.incrementStudentScoreByOne();
+            System.out.println("Right answer!\n");
+            return true;
         } else {
-            System.out.println("Wrong answer!");
+            System.out.println("Wrong answer!\n");
+            return false;
         }
     }
 
-    public void addTestToDatabase(Test test) {
-        var wasAdded = testRepo.persistTestToDatabase(test);
+    private void createNewTestAndAddToStudentAndToDatabase(String category, int maxScore, int studentScore) {
 
-        if(wasAdded) {
-            System.out.println("Test was added to the database!");
+        // Add new test entity
+        Test test = new Test(category, maxScore, studentScore, LocalDate.now(), currentStudent);
+
+        if(testRepo.persistTestToDatabase(test)) {
+            System.out.println("Test was added to the database!\n");
         } else {
-            System.out.println("Test was not added to the database!");
+            System.out.println("Test was not added to the database!\n");
         }
+
     }
 
 }

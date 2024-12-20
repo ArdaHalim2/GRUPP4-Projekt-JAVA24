@@ -1,16 +1,16 @@
 package se.iths.repositories;
 
+import static se.iths.repositories.JPAUtil.*;
+
+import jakarta.persistence.EntityManager;
 import se.iths.entity.Test;
 import se.iths.entity.Student;
 import java.util.List;
 import java.util.Optional;
 
-import static se.iths.repositories.JPAUtil.*;
-
 public class TestRepo {
 
     public Optional<List<Test>> getAllTestsFromDatabase() {
-
         try {
             var allTestsList = getEntityManager()
                     .createQuery("SELECT t FROM Test t", Test.class)
@@ -23,7 +23,6 @@ public class TestRepo {
     }
 
     public Optional<List<Test>> getAllTestsByCategoryFromDatabase(String category) {
-
         try {
             var allTestsList = getEntityManager()
                     .createQuery("SELECT t FROM Test t WHERE t.category = :category", Test.class)
@@ -37,7 +36,6 @@ public class TestRepo {
     }
 
     public Optional<List<Test>> getAllTestsByStudentFromDatabase(Student student) {
-
         try {
             var allTestsList = getEntityManager()
                     .createQuery("SELECT t FROM Test t WHERE t.student = :student", Test.class)
@@ -51,10 +49,8 @@ public class TestRepo {
     }
 
     public Optional<Test> getTestByIdFromDatabase(int id) {
-
         try {
-            var test = getEntityManager()
-                    .find(Test.class, id);
+            var test = getEntityManager().find(Test.class, id);
 
             return Optional.of(test);
         } catch (Exception e) {
