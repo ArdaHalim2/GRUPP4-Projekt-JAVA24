@@ -112,10 +112,13 @@ public class LakeCrud {
     }
 
     public void showAllLakes() {
-        lakeRepo.getAllLakesFromDatabase()
-                .ifPresentOrElse(
-                        lakes -> lakes.forEach(System.out::println),
-                        () -> System.out.println("No lakes found.")
-                );
+        System.out.println("---- List of All Lakes ----");
+        lakeRepo.getAllLakesFromDatabase().get().forEach(lake -> {
+            System.out.println("Lake ID: " + lake.getId());
+            System.out.println("Lake Name: " + lake.getName());
+            System.out.println("Country: " + lake.getCountry().getName());
+            System.out.println("----------------------------");
+        });
     }
+
 }

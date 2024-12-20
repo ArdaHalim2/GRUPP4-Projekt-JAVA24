@@ -2,6 +2,7 @@ package se.iths.crud;
 
 import se.iths.entity.Country;
 import se.iths.repositories.CountryRepo;
+
 import java.util.Scanner;
 
 public class CountryCrud {
@@ -105,10 +106,17 @@ public class CountryCrud {
     }
 
     public void showAllCountries() {
-        countryRepo.getAllCountries()
-                .ifPresentOrElse(
-                        countries -> countries.forEach(System.out::println),
-                        () -> System.out.println("No countries found")
-                );
+        System.out.println("---- List of All Countries ----");
+        countryRepo.getAllCountries().get().forEach(country -> {
+            System.out.println("ID: " + country.getId());
+            System.out.println("Name: " + country.getName());
+            System.out.println("Capital: " + country.getCapital());
+            System.out.println("Cities: ");
+            country.getCities().forEach(city -> System.out.println("  - " + city.getName()));
+            System.out.println("Lakes: ");
+            country.getLakes().forEach(lake -> System.out.println("  - " + lake.getName()));
+            System.out.println("------------------------------");
+        });
     }
+
 }

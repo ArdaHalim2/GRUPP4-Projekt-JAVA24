@@ -101,11 +101,28 @@ public class StudentCrud {
     }
 
     public void showAllStudents() {
+        System.out.println("---- List of All Students ----");
+
         studentRepo.getAllStudentsFromDatabase()
                 .ifPresentOrElse(
-                        students -> students.forEach(System.out::println),
-                        () -> System.out.println("No students found")
+                        students -> students.forEach(student -> {
+                            System.out.println("Student ID: " + student.getId());
+                            System.out.println("Student Name: " + student.getName());
+                            if (student.getTests().isEmpty()) {
+                                System.out.println("No tests available for this student.");
+                            } else {
+                                student.getTests().forEach(test -> {
+                                    System.out.println("Test Category: " + test.getCategory());
+                                    System.out.println("Max Score: " + test.getMaxScore());
+                                    System.out.println("Student Score: " + test.getStudentScore());
+                                    System.out.println("Test Date: " + test.getDate());
+                                });
+                            }
+                            System.out.println("----------------------------");
+                        }),
+                        () -> System.out.println("No students found.")
                 );
     }
+
 
 }

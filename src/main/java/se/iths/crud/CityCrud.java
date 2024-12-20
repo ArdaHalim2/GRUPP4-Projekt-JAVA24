@@ -3,6 +3,7 @@ package se.iths.crud;
 import se.iths.entity.City;
 import se.iths.repositories.CityRepo;
 import se.iths.repositories.CountryRepo;
+
 import java.util.Scanner;
 
 public class CityCrud {
@@ -52,7 +53,7 @@ public class CityCrud {
 
         var cityCountry = new CountryRepo().getCountryByIdFromDatabase(countryId);
 
-        if(cityCountry.isPresent()){
+        if (cityCountry.isPresent()) {
             System.out.print("Enter city name: ");
             String cityName = scanner.nextLine();
 
@@ -112,10 +113,13 @@ public class CityCrud {
     }
 
     public void showAllCities() {
-        cityRepo.getAllCitiesFromDatabase()
-                .ifPresentOrElse(
-                        city -> city.forEach(System.out::println),
-                        () -> System.out.println("No cities was found.")
-                );
+        System.out.println("---- List of All Cities ----");
+        cityRepo.getAllCitiesFromDatabase().get().forEach(city -> {
+            System.out.println("City ID: " + city.getId());
+            System.out.println("City Name: " + city.getName());
+            System.out.println("Country: " + city.getCountry().getName());
+            System.out.println("------------------------------");
+        });
     }
+
 }

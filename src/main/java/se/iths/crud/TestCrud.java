@@ -3,6 +3,7 @@ package se.iths.crud;
 import se.iths.entity.Test;
 import se.iths.repositories.TestRepo;
 import se.iths.repositories.StudentRepo;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -129,10 +130,20 @@ public class TestCrud {
     }
 
     public void showAllTests() {
+        System.out.println("---- List of All Tests ----");
         testRepo.getAllTestsFromDatabase()
                 .ifPresentOrElse(
-                        tests -> tests.forEach(System.out::println),
-                        () -> System.out.println("No tests found")
+                        tests -> tests.forEach(test -> {
+                            System.out.println("Test ID: " + test.getId());
+                            System.out.println("Test Category: " + test.getCategory());
+                            System.out.println("Max Score: " + test.getMaxScore());
+                            System.out.println("Student Score: " + test.getStudentScore());
+                            System.out.println("Test Date: " + test.getDate());
+                            System.out.println("Student: " + test.getStudent().getName());
+                            System.out.println("--------------------------");
+                        }),
+                        () -> System.out.println("No tests found.")
                 );
     }
+
 }

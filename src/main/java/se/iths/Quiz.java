@@ -5,6 +5,7 @@ import se.iths.repositories.CityRepo;
 import se.iths.repositories.CountryRepo;
 import se.iths.repositories.LakeRepo;
 import se.iths.repositories.TestRepo;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -25,7 +26,7 @@ public class Quiz {
 
     public void quizMenu() {
 
-        if(currentStudent == null) {
+        if (currentStudent == null) {
             System.out.println("Login required.");
             return;
         }
@@ -40,17 +41,17 @@ public class Quiz {
 
         boolean runMenu = true;
 
-        while(runMenu){
+        while (runMenu) {
 
             System.out.println("""
-                
-                QUIZ MENU
-                Choose quiz category:
-                
-                1. Capitals
-                2. Lakes
-                3. Cities
-                0. Go back to main menu""");
+                    
+                    QUIZ MENU
+                    Choose quiz category:
+                    
+                    1. Capitals
+                    2. Lakes
+                    3. Cities
+                    0. Go back to main menu""");
 
             System.out.print("Enter your choice: ");
             String userChoice = scanner.nextLine();
@@ -77,7 +78,7 @@ public class Quiz {
             for (Country country : randomCountries.get()) {
                 System.out.println("What is the capital of " + country.getName() + "?");
                 String userAnswer = scanner.nextLine();
-                if(checkForRightAnswer(userAnswer, country.getCapital())){
+                if (checkForRightAnswer(userAnswer, country.getCapital())) {
                     studentScore++;
                 }
             }
@@ -97,7 +98,7 @@ public class Quiz {
             for (Lake lake : randomLakes.get()) {
                 System.out.println("In which country is the lake " + lake.getName() + " located?");
                 String userAnswer = scanner.nextLine();
-                if(checkForRightAnswer(userAnswer, lake.getCountry().getName())){
+                if (checkForRightAnswer(userAnswer, lake.getCountry().getName())) {
                     studentScore++;
                 }
             }
@@ -117,12 +118,15 @@ public class Quiz {
             for (City city : randomCities.get()) {
                 System.out.println("In what country is " + city.getName() + " located?");
                 String userAnswer = scanner.nextLine();
-                checkForRightAnswer(userAnswer, city.getCountry().getName());
+                if (checkForRightAnswer(userAnswer, city.getCountry().getName())) {
+                    studentScore++;  // inkrementerar resutatet när studenten svarar rätt
+                }
             }
 
             createNewTestAndAddToStudentAndToDatabase("cities", amountOfQuestions, studentScore);
         }
     }
+
 
     private boolean checkForRightAnswer(String userAnswer, String rightAnswer) {
         if (userAnswer.equals(rightAnswer)) {
@@ -139,7 +143,7 @@ public class Quiz {
         // Add new test entity
         Test test = new Test(category, maxScore, studentScore, LocalDate.now(), currentStudent);
 
-        if(testRepo.persistTestToDatabase(test)) {
+        if (testRepo.persistTestToDatabase(test)) {
             System.out.println("Test was added to the database!\n");
         } else {
             System.out.println("Test was not added to the database!\n");
