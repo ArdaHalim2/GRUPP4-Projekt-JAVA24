@@ -1,11 +1,7 @@
 package se.iths.repositories;
 
 import static se.iths.repositories.JPAUtil.*;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import se.iths.entity.Lake;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +15,7 @@ public class LakeRepo {
                     .getResultList();
 
             return Optional.of(randomLakes);
+
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -27,34 +24,38 @@ public class LakeRepo {
 
     // Hämta alla sjöar från databasen
     public Optional<List<Lake>> getAllLakesFromDatabase() {
-        EntityManager em = JPAUtil.getEntityManager();
         try {
-            TypedQuery<Lake> query = em.createQuery("SELECT l FROM Lake l", Lake.class);
-            return Optional.of(query.getResultList());
+            var allLakes = getEntityManager()
+                    .createQuery("SELECT l FROM Lake l", Lake.class)
+                    .getResultList();
+
+            return Optional.of(allLakes);
+
         } catch (Exception e) {
             return Optional.empty();
-        } finally {
-            em.close();
         }
     }
 
     // Hitta en specifik sjö i databasen
-    public Optional<Lake> findLakeInDatabase(Lake lake) {
-        EntityManager em = JPAUtil.getEntityManager();
+    public Optional<Lake> getLakeByIdFromDatabase(int id) {
         try {
-            return Optional.ofNullable(em.find(Lake.class, lake.getId()));
+            var lake = getEntityManager().find(Lake.class, id);
+            return Optional.ofNullable(lake);
+
         } catch (Exception e) {
             return Optional.empty();
-        } finally {
-            em.close();
         }
     }
 
     // Lägga till en ny sjö i databasen
     public boolean persistLakeToDatabase(Lake lake) {
+
         try {
-            JPAUtil.inTransaction(entityManager -> entityManager.persist(lake));
+            inTransaction(entityManager -> {
+                entityManager.persist(lake);
+            });
             return true;
+
         } catch (Exception e) {
             return false;
         }
@@ -63,11 +64,9 @@ public class LakeRepo {
     // Ta bort en sjö från databasen
     public boolean removeLakeFromDatabase(Lake lake) {
         try {
-            JPAUtil.inTransaction(entityManager -> {
-                Lake toRemove = entityManager.find(Lake.class, lake.getId());
-                if (toRemove != null) {
-                    entityManager.remove(toRemove);
-                }
+            inTransaction(entityManager -> {
+                Lake lakeToRemove = entityManager.find(Lake.class, lake.getId());
+                entityManager.remove(lakeToRemove);
             });
             return true;
         } catch (Exception e) {
@@ -78,7 +77,9 @@ public class LakeRepo {
     // Uppdatera information om en sjö i databasen
     public boolean mergeLakeInDatabase(Lake lake) {
         try {
-            JPAUtil.inTransaction(entityManager -> entityManager.merge(lake));
+            inTransaction(entityManager -> {
+               entityManager.merge(lake);
+            });
             return true;
         } catch (Exception e) {
             return false;

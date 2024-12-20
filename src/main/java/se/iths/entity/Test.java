@@ -2,17 +2,18 @@ package se.iths.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
-
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "test", schema = "demo")
 public class Test {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "testId", nullable = false)
     private Integer id;
 
-    @Column(name = "testCategory")
+    @Column(name = "testCategory", nullable = false)
     private String category;
 
     @ColumnDefault("0")
@@ -23,7 +24,7 @@ public class Test {
     @Column(name = "testStudentScore")
     private int studentScore;
 
-    @Column(name = "testDate")
+    @Column(name = "testDate", nullable = false)
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -32,7 +33,13 @@ public class Test {
 
     public Test(){}
 
-    public Test(String category, int maxScore, LocalDate date, Student student) {}
+    public Test(String category, int maxScore, int studentScore, LocalDate date, Student student) {
+        this.category = category;
+        this.maxScore = maxScore;
+        this.studentScore = studentScore;
+        this.date = date;
+        this.student = student;
+    }
 
     public Integer getId() {
         return id;
@@ -78,13 +85,7 @@ public class Test {
         return student;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public void incrementStudentScoreByOne() {
-        studentScore++;
-    }
+    public void setStudent(Student student) { this.student = student; }
 
     @Override
     public String toString() {

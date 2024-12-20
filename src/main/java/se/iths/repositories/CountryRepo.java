@@ -35,9 +35,7 @@ public class CountryRepo {
 
     public Optional<Country> getCountryByIdFromDatabase(int id) {
         try {
-            var country = getEntityManager()
-                    .find(Country.class, id);
-
+            var country = getEntityManager().find(Country.class, id);
             return Optional.of(country);
         } catch (Exception e) {
             return Optional.empty();

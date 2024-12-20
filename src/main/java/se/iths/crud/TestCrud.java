@@ -1,18 +1,14 @@
-package se.iths;
+package se.iths.crud;
 
 import se.iths.entity.Test;
-import se.iths.entity.Student;
 import se.iths.repositories.TestRepo;
 import se.iths.repositories.StudentRepo;
-
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class TestCrud {
 
     private final TestRepo testRepo = new TestRepo();
-    private final StudentRepo studentRepo = new StudentRepo();
     private Scanner scanner;
 
     public TestCrud(Scanner scanner) {
@@ -20,19 +16,24 @@ public class TestCrud {
     }
 
     public void testCrudMenu() {
+
         boolean runMenu = true;
+
         while (runMenu) {
+
             System.out.println("""
+                    
                     CRUD TEST
                     
                     1. Add Test
                     2. Update Test
                     3. Delete Test
                     4. Show all tests
-                    0. Go back to main menu
-                    """);
+                    0. Go back to edit menu""");
 
+            System.out.print("Enter your choice: ");
             String userAnswer = scanner.nextLine();
+            System.out.println();
 
             switch (userAnswer) {
                 case "1" -> addTest();
@@ -40,31 +41,36 @@ public class TestCrud {
                 case "3" -> deleteTest();
                 case "4" -> showAllTests();
                 case "0" -> runMenu = false;
-                default -> System.out.println("Invalid input");
+                default -> System.out.println("Invalid menu choice. Please try again.");
             }
         }
     }
 
+    /**
+     * This method is for entering a test manually.
+     * Tests are usually added after student finishies a quiz ("automatic")
+     */
     public void addTest() {
-        System.out.println("Enter test category: ");
-        String category = scanner.nextLine();
 
-        System.out.println("Enter max score for the test: ");
-        int maxScore = scanner.nextInt();
-
-        System.out.println("Enter student ID associated with this test: ");
+        System.out.print("Enter student id associated with this test: ");
         int studentId = scanner.nextInt();
         scanner.nextLine();
 
-        Optional<Student> studentOptional = studentRepo.getStudentByIdFromDatabase(studentId);
+        var testStudent = new StudentRepo().getStudentByIdFromDatabase(studentId);
 
-        if (studentOptional.isPresent()) {
-            Test test = new Test();
-            test.setCategory(category);
-            test.setMaxScore(maxScore);
-            test.setStudentScore(0);
-            test.setDate(LocalDate.now());
-            test.setStudent(studentOptional.get());
+        if (testStudent.isPresent()) {
+            System.out.print("Enter test category: ");
+            String category = scanner.nextLine();
+
+            System.out.print("Enter max score for the test: ");
+            int maxScore = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.print("Enter student score for the test: ");
+            int studentScore = scanner.nextInt();
+            scanner.nextLine();
+
+            Test test = new Test(category, maxScore, studentScore, LocalDate.now(), testStudent.get());
 
             if (testRepo.persistTestToDatabase(test)) {
                 System.out.println("Test was added to the database");
@@ -72,58 +78,53 @@ public class TestCrud {
                 System.out.println("Test was not added to the database");
             }
         } else {
-            System.out.println("No student found with ID: " + studentId);
+            System.out.println("No student found with id: " + studentId);
         }
     }
 
     public void updateTest() {
-        System.out.println("Enter the ID of the test you want to update: ");
+        System.out.print("Enter the id of the test you want to update: ");
         int testId = scanner.nextInt();
         scanner.nextLine();
 
-        Optional<Test> testOptional = testRepo.getTestByIdFromDatabase(testId);
+        var testToUpdate = testRepo.getTestByIdFromDatabase(testId);
 
-        if (testOptional.isPresent()) {
-            Test test = testOptional.get();
-
-            System.out.println("Enter new category for the test: ");
+        if (testToUpdate.isPresent()) {
+            System.out.print("Enter new category for the test: ");
             String updatedCategory = scanner.nextLine();
-            System.out.println("Enter new max score for the test: ");
+            System.out.print("Enter new max score for the test: ");
             int updatedMaxScore = scanner.nextInt();
             scanner.nextLine();
 
+            Test test = testToUpdate.get();
             test.setCategory(updatedCategory);
             test.setMaxScore(updatedMaxScore);
 
-            boolean isUpdated = testRepo.mergeTestToDatabase(test);
-
-            if (isUpdated) {
+            if (testRepo.mergeTestToDatabase(test)) {
                 System.out.println("Test was updated in the database");
             } else {
                 System.out.println("Test was not updated in the database");
             }
         } else {
-            System.out.println("No test was found with the ID: " + testId);
+            System.out.println("No test was found with id: " + testId);
         }
     }
 
     public void deleteTest() {
-        System.out.println("Enter test ID to delete: ");
+        System.out.print("Enter the id of the test you want to delete: ");
         int testId = scanner.nextInt();
         scanner.nextLine();
 
-        Optional<Test> testOptional = testRepo.getTestByIdFromDatabase(testId);
+        var testToDelete = testRepo.getTestByIdFromDatabase(testId);
 
-        if (testOptional.isPresent()) {
-            boolean wasDeleted = testRepo.removeTestFromDatabase(testOptional.get());
-
-            if (wasDeleted) {
-                System.out.println("Test with ID " + testId + " was deleted");
+        if (testToDelete.isPresent()) {
+            if (testRepo.removeTestFromDatabase(testToDelete.get())) {
+                System.out.println("Test with id: " + testId + " was deleted");
             } else {
-                System.out.println("Failed to remove test with ID " + testId);
+                System.out.println("Failed to remove test with id: " + testId);
             }
         } else {
-            System.out.println("No test was found with the ID: " + testId);
+            System.out.println("No test was found with id: " + testId);
         }
     }
 

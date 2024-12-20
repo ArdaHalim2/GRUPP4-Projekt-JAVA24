@@ -1,7 +1,8 @@
-package se.iths;
+package se.iths.crud;
 
 import se.iths.entity.City;
 import se.iths.repositories.CityRepo;
+import se.iths.repositories.CountryRepo;
 import java.util.Scanner;
 
 public class CityCrud {
@@ -19,16 +20,18 @@ public class CityCrud {
 
         while (runMenu) {
             System.out.println("""
+                    
                     CRUD CITY
                     
                     1. Add City
                     2. Update City
                     3. Delete City
                     4. Show all cities
-                    0. Go back to edit menu
-                    """);
+                    0. Go back to edit menu""");
 
+            System.out.print("Enter your choice: ");
             String userAnswer = scanner.nextLine();
+            System.out.println();
 
             switch (userAnswer) {
                 case "1" -> addCity();
@@ -43,66 +46,68 @@ public class CityCrud {
 
     public void addCity() {
 
-        System.out.println("Enter city name: ");
-        String cityName = scanner.nextLine();
+        System.out.print("Enter country id for the city to add: ");
+        int countryId = scanner.nextInt();
+        scanner.nextLine(); // Rensa scanner
 
-        System.out.println("Enter city country id: ");
-        int cityCountry = scanner.nextInt();
-        scanner.nextLine();
-        City city = new City(cityName, new);
+        var cityCountry = new CountryRepo().getCountryByIdFromDatabase(countryId);
 
-        if (cityRepo.persistCityToDatabase(city)) {
-            System.out.println("City was added to the database");
+        if(cityCountry.isPresent()){
+            System.out.print("Enter city name: ");
+            String cityName = scanner.nextLine();
+
+            City city = new City(cityName, cityCountry.get());
+
+            if (cityRepo.persistCityToDatabase(city)) {
+                System.out.println("City was added to the database.");
+            } else {
+                System.out.println("City was not added to the database.");
+            }
         } else {
-            System.out.println("City was not added to the database");
+            System.out.println("Country with id: " + countryId + " was not found.");
         }
     }
 
     public void updateCity() {
 
-        System.out.println("Enter the ID of the city you want to update: ");
+        System.out.print("Enter the id of the city you want to update: ");
         int cityId = scanner.nextInt();
         scanner.nextLine();
 
-        var cityOptional = cityRepo.getCityByIdFromDatabase(cityId);
+        var cityToUpdate = cityRepo.getCityByIdFromDatabase(cityId);
 
-        if (cityOptional.isPresent()) {
-
-            var city = cityOptional.get();
-
-            System.out.println("Enter new name for the city: ");
+        if (cityToUpdate.isPresent()) {
+            System.out.print("Enter new name for the city: ");
             String updateCityName = scanner.nextLine();
 
+            City city = cityToUpdate.get();
             city.setName(updateCityName);
 
-            boolean isUpdated = cityRepo.mergeCityInDatabase(city);
-
-            if (isUpdated) {
+            if (cityRepo.mergeCityInDatabase(city)) {
                 System.out.println("City was updated in the database");
             } else {
                 System.out.println("City was not updated in the database");
             }
         } else {
-            System.out.println("No city was found wit the id: " + cityId);
+            System.out.println("No city was found with id: " + cityId);
         }
     }
 
     public void deleteCity() {
-        System.out.println("Enter city ID to delete: ");
+        System.out.print("Enter the id of the city you want to delete: ");
         int idToDelete = scanner.nextInt();
+        scanner.nextLine();
 
-        var cityOptional = cityRepo.getCityByIdFromDatabase(idToDelete);
+        var cityToDelete = cityRepo.getCityByIdFromDatabase(idToDelete);
 
-        if (cityOptional.isPresent()) {
-            boolean wasDeleted = cityRepo.removeCityFromDatabase(cityOptional.get());
-
-            if (wasDeleted) {
+        if (cityToDelete.isPresent()) {
+            if (cityRepo.removeCityFromDatabase(cityToDelete.get())) {
                 System.out.println("City with id: " + idToDelete + " was deleted");
             } else {
                 System.out.println("Failed to delete city with id: " + idToDelete);
             }
         } else {
-            System.out.println("No city was found with the id: " + idToDelete);
+            System.out.println("No city was found with id: " + idToDelete);
         }
     }
 

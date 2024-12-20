@@ -1,55 +1,53 @@
 package se.iths;
 
-import se.iths.entity.Student;
-import se.iths.repositories.StudentRepo;
-
+import se.iths.crud.*;
+import se.iths.entity.*;
+import se.iths.repositories.*;
 import java.util.Scanner;
 
 public class Main {
 
-    private static Student currentStudent = new Student();
+    private static Student currentStudent = null;
     private static final Scanner scanner = new Scanner(System.in);
     private static final StudentRepo studentRepo = new StudentRepo();
     private static final StudentCrud studentCrud = new StudentCrud(scanner);
-    private static final TestCrud testCrud = new TestCrud(scanner);
-    private static final CityCrud cityCrud = new CityCrud(scanner);
-    private static final CountryCrud countryCrud = new CountryCrud(scanner);
-    private static final LakeCrud lakeCrud = new LakeCrud(scanner);
-    private static final Quiz quiz = new Quiz(scanner, currentStudent);
 
     public static void main(String[] args) {
         printStartMenu();
     }
 
-    public static void printStartMenu() {
+    private static void printStartMenu() {
 
         boolean runMenu = true;
 
         while (runMenu) {
             System.out.println("""
-                START MENU
                 
-                1. Log in
-                2. Edit
-                3. Take Quiz
-                0. Exit program
-                """);
+                    \tSTART MENU
+                
+                    \t1. Log in
+                    \t2. Edit
+                    \t3. Take Quiz
+                    \t0. Exit program""");
 
+
+            System.out.print("\tEnter your choice: ");
             String userChoiceStartMenu = scanner.nextLine();
+            System.out.println();
 
             switch (userChoiceStartMenu) {
                 case "1" -> logInUser();
                 case "2" -> crudMenu();
-                case "3" -> quiz.quizMenu();
+                case "3" -> new Quiz(scanner, currentStudent).quizMenu();
                 case "0" -> runMenu = false;
-                default -> System.out.println("Invalid choice. Please try again.");
+                default -> System.out.println("Invalid menu choice. Please try again.");
             }
         }
     }
 
-    public static void logInUser() {
+    private static void logInUser() {
 
-        System.out.println("Enter your user ID: ");
+        System.out.print("Enter your user id: ");
         int userId = scanner.nextInt();
         scanner.nextLine();
 
@@ -57,18 +55,24 @@ public class Main {
 
         if (student.isPresent()) {
             currentStudent = student.get();
-            System.out.println("You are logged in!");
+            System.out.println("LOG IN SUCCESSFUL");
         } else {
-            System.out.println("You are not logged in!");
+            System.out.println("LOG IN FAILED");
         }
     }
 
-    public static void crudMenu() {
+    private static void crudMenu() {
+
+        if(currentStudent == null){
+            System.out.println("Login required.");
+            return;
+        }
 
         boolean runMenu = true;
 
         while(runMenu) {
             System.out.println("""
+                
                 CRUD ENTITIES
                 Choose which one to edit:
                 
@@ -77,19 +81,20 @@ public class Main {
                 3. Country
                 4. City
                 5. Lake
-                0. Go back to main menu
-                """);
+                0. Go back to main menu""");
 
+            System.out.print("Enter your choice: ");
             String userAnswer = scanner.nextLine();
+            System.out.println();
 
             switch (userAnswer) {
                 case "1" -> studentCrud.studentCrudMenu();
-                case "2" -> testCrud.testCrudMenu();
-                case "3" -> countryCrud.countryCrudMenu();
-                case "4" -> cityCrud.cityCrudMenu();
-                case "5" -> lakeCrud.lakeCrudMenu();
+                case "2" -> new TestCrud(scanner).testCrudMenu();
+                case "3" -> new CountryCrud(scanner).countryCrudMenu();
+                case "4" -> new CityCrud(scanner).cityCrudMenu();
+                case "5" -> new LakeCrud(scanner).lakeCrudMenu();
                 case "0" -> runMenu = false;
-                default -> System.out.println("Invalid choice");
+                default -> System.out.println("Invalid menu choice. Please try again.");
             }
         }
     }
