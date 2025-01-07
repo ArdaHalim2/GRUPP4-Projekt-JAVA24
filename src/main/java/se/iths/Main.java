@@ -28,7 +28,8 @@ public class Main {
                     \t1. Log in
                     \t2. Edit
                     \t3. Take Quiz
-                    \t0. Exit program""");
+                    \t4. Show Statistics
+                    \t0. Exit Program""");
 
 
             System.out.print("\tEnter your choice: ");
@@ -39,6 +40,7 @@ public class Main {
                 case "1" -> logInUser();
                 case "2" -> crudMenu();
                 case "3" -> new Quiz(scanner, currentStudent).quizMenu();
+                case "4" -> new Statistic(scanner, currentStudent).statisticMenu();
                 case "0" -> runMenu = false;
                 default -> System.out.println("Invalid menu choice. Please try again.");
             }
