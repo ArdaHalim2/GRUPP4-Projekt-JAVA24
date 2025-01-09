@@ -11,7 +11,7 @@ public class Main {
     private static Student currentStudent = null;
     private static final Scanner scanner = new Scanner(System.in);
     private static final StudentRepo studentRepo = new StudentRepo();
-    private static final StudentCrud studentCrud = new StudentCrud(scanner);
+    private static final StudentCrud studentCrud = new StudentCrud();
 
     public static void main(String[] args) {
         printStartMenu();
@@ -24,7 +24,7 @@ public class Main {
         while (runMenu) {
             System.out.println("""
                     
-                    \tSTART MENU
+                    \tSTART MENU 
                     
                     \t1. Log in
                     \t2. Edit
@@ -32,18 +32,15 @@ public class Main {
                     \t4. Show Statistics
                     \t0. Exit Program""");
 
+            String userInput = getValidString("\tEnter your choice: ");
 
-            System.out.print("\tEnter your choice: ");
-            String userChoiceStartMenu = scanner.nextLine();
-            System.out.println();
-
-            switch (userChoiceStartMenu) {
+            switch (userInput) {
                 case "1" -> logInUser();
                 case "2" -> crudMenu();
                 case "3" -> new Quiz(scanner, currentStudent).quizMenu();
-                case "4" -> new Statistic(scanner, currentStudent).statisticMenu();
+                case "4" -> new Statistic(currentStudent).statisticMenu();
                 case "0" -> runMenu = false;
-                default -> System.out.println("Invalid menu choice. Please try again.");
+                default -> System.out.println("\tInvalid menu choice. Please try again.");
             }
         }
     }
@@ -73,26 +70,24 @@ public class Main {
         while (runMenu) {
             System.out.println("""
                     
-                    CRUD ENTITIES
-                    Choose which one to edit:
+                    \tCRUD ENTITIES
+                    \tChoose which one to edit:
                     
-                    1. Student
-                    2. Test
-                    3. Country
-                    4. City
-                    5. Lake
-                    0. Go back to main menu""");
+                    \t1. Student
+                    \t2. Test
+                    \t3. Country
+                    \t4. City
+                    \t5. Lake
+                    \t0. Go back to main menu""");
 
-            System.out.print("Enter your choice: ");
-            String userAnswer = scanner.nextLine();
-            System.out.println();
+            String userInput = getValidString("\tEnter your choice: ");
 
-            switch (userAnswer) {
+            switch (userInput) {
                 case "1" -> studentCrud.studentCrudMenu();
-                case "2" -> new TestCrud(scanner).testCrudMenu();
-                case "3" -> new CountryCrud(scanner).countryCrudMenu();
-                case "4" -> new CityCrud(scanner).cityCrudMenu();
-                case "5" -> new LakeCrud(scanner).lakeCrudMenu();
+                case "2" -> new TestCrud().testCrudMenu();
+                case "3" -> new CountryCrud().countryCrudMenu();
+                case "4" -> new CityCrud().cityCrudMenu();
+                case "5" -> new LakeCrud().lakeCrudMenu();
                 case "0" -> runMenu = false;
                 default -> System.out.println("Invalid menu choice. Please try again.");
             }
@@ -105,7 +100,21 @@ public class Main {
                 System.out.print(prompt);
                 return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please try again.");
+                System.out.println("Invalid input. Must be numeric. Please try again.");
+            }
+        }
+    }
+
+    public static String getValidString(String prompt) {
+        while(true){
+            System.out.print(prompt);
+            String userInput = scanner.nextLine();
+            System.out.println();
+
+            if(!userInput.isBlank()){
+                return userInput;
+            } else {
+                System.out.println("Invalid input. String can not be empty. Please try again.");
             }
         }
     }

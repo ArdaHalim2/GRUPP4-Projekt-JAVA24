@@ -5,16 +5,9 @@ import se.iths.entity.Lake;
 import se.iths.repositories.CountryRepo;
 import se.iths.repositories.LakeRepo;
 
-import java.util.Scanner;
-
 public class LakeCrud {
 
     private final LakeRepo lakeRepo = new LakeRepo();
-    private final Scanner scanner;
-
-    public LakeCrud(Scanner scanner) {
-        this.scanner = scanner;
-    }
 
     public void lakeCrudMenu() {
 
@@ -24,17 +17,15 @@ public class LakeCrud {
 
             System.out.println("""
                     
-                    CRUD LAKE
+                    \tCRUD LAKE
                     
-                    1. Add Lake
-                    2. Update Lake
-                    3. Delete Lake
-                    4. Show all Lakes
-                    0. Go back to edit menu""");
+                    \t1. Add Lake
+                    \t2. Update Lake
+                    \t3. Delete Lake
+                    \t4. Show all Lakes
+                    \t0. Go back to edit menu""");
 
-            System.out.print("Enter your choice: ");
-            String userAnswer = scanner.nextLine();
-            System.out.println();
+            String userAnswer = Main.getValidString("\tEnter your choice: ");
 
             switch (userAnswer) {
                 case "1" -> addLake();
@@ -49,15 +40,12 @@ public class LakeCrud {
 
     public void addLake() {
 
-        System.out.print("Enter country id for the lake: ");
-        int countryId = scanner.nextInt();
-        scanner.nextLine(); // Rensa scanner
+        int countryId = Main.getValidInt("Enter country id for the lake: ");
 
         var lakeCountry = new CountryRepo().getCountryByIdFromDatabase(countryId);
 
         if (lakeCountry.isPresent()) {
-            System.out.print("Enter lake name: ");
-            String lakeName = scanner.nextLine();
+            String lakeName = Main.getValidString("Enter lake name: ");
 
             Lake lake = new Lake(lakeName, lakeCountry.get());
 
@@ -77,8 +65,7 @@ public class LakeCrud {
         var lakeToUpdate = lakeRepo.getLakeByIdFromDatabase(lakeId);
 
         if (lakeToUpdate.isPresent()) {
-            System.out.print("Enter new name for the lake: ");
-            String updatedName = scanner.nextLine();
+            String updatedName = Main.getValidString("Enter new name for the lake: ");
 
             Lake lake = lakeToUpdate.get();
             lake.setName(updatedName);

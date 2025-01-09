@@ -4,16 +4,9 @@ import se.iths.Main;
 import se.iths.entity.Student;
 import se.iths.repositories.StudentRepo;
 
-import java.util.Scanner;
-
 public class StudentCrud {
 
     private final StudentRepo studentRepo = new StudentRepo();
-    private Scanner scanner;
-
-    public StudentCrud(Scanner scanner) {
-        this.scanner = scanner;
-    }
 
     public void studentCrudMenu() {
 
@@ -23,17 +16,15 @@ public class StudentCrud {
 
             System.out.println("""
                     
-                    CRUD STUDENT
+                    \tCRUD STUDENT
                     
-                    1. Add Student
-                    2. Update Student
-                    3. Delete Student
-                    4. Show all students
-                    0. Go back to edit menu""");
+                    \t1. Add Student
+                    \t2. Update Student
+                    \t3. Delete Student
+                    \t4. Show all students
+                    \t0. Go back to edit menu""");
 
-            System.out.print("Enter your choice: ");
-            String userAnswer = scanner.nextLine();
-            System.out.println();
+            String userAnswer = Main.getValidString("\tEnter your choice: ");
 
             switch (userAnswer) {
                 case "1" -> addStudent();
@@ -48,8 +39,7 @@ public class StudentCrud {
 
     public void addStudent() {
 
-        System.out.print("Enter student name: ");
-        String studentName = scanner.nextLine();
+        String studentName = Main.getValidString("Enter student name: ");
 
         Student student = new Student(studentName);
 
@@ -66,8 +56,7 @@ public class StudentCrud {
         var studentToUpdate = studentRepo.getStudentByIdFromDatabase(studentId);
 
         if (studentToUpdate.isPresent()) {
-            System.out.print("Enter new name for the student: ");
-            String updateStudentName = scanner.nextLine();
+            String updateStudentName = Main.getValidString("Enter new name for the student: ");
 
             Student student = studentToUpdate.get();
             student.setName(updateStudentName);

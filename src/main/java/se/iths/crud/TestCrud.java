@@ -4,18 +4,11 @@ import se.iths.Main;
 import se.iths.entity.Test;
 import se.iths.repositories.TestRepo;
 import se.iths.repositories.StudentRepo;
-
 import java.time.LocalDate;
-import java.util.Scanner;
 
 public class TestCrud {
 
     private final TestRepo testRepo = new TestRepo();
-    private Scanner scanner;
-
-    public TestCrud(Scanner scanner) {
-        this.scanner = scanner;
-    }
 
     public void testCrudMenu() {
 
@@ -25,17 +18,15 @@ public class TestCrud {
 
             System.out.println("""
                     
-                    CRUD TEST
+                    \tCRUD TEST
                     
-                    1. Add Test
-                    2. Update Test
-                    3. Delete Test
-                    4. Show all tests
-                    0. Go back to edit menu""");
+                    \t1. Add Test
+                    \t2. Update Test
+                    \t3. Delete Test
+                    \t4. Show all tests
+                    \t0. Go back to edit menu""");
 
-            System.out.print("Enter your choice: ");
-            String userAnswer = scanner.nextLine();
-            System.out.println();
+            String userAnswer = Main.getValidString("Enter your choice: ");
 
             switch (userAnswer) {
                 case "1" -> addTest();
@@ -54,23 +45,14 @@ public class TestCrud {
      */
     public void addTest() {
 
-        System.out.print("Enter student id associated with this test: ");
-        int studentId = scanner.nextInt();
-        scanner.nextLine();
+        int studentId = Main.getValidInt("Enter student id associated with this test: ");
 
         var testStudent = new StudentRepo().getStudentByIdFromDatabase(studentId);
 
         if (testStudent.isPresent()) {
-            System.out.print("Enter test category: ");
-            String category = scanner.nextLine();
-
-            System.out.print("Enter max score for the test: ");
-            int maxScore = scanner.nextInt();
-            scanner.nextLine();
-
-            System.out.print("Enter student score for the test: ");
-            int studentScore = scanner.nextInt();
-            scanner.nextLine();
+            String category = Main.getValidString("Enter test category: ");
+            int maxScore = Main.getValidInt("Enter max score for the test: ");
+            int studentScore = Main.getValidInt("Enter student score for the test: ");
 
             Test test = new Test(category, maxScore, studentScore, LocalDate.now(), testStudent.get());
 
@@ -90,13 +72,10 @@ public class TestCrud {
         var testToUpdate = testRepo.getTestByIdFromDatabase(testId);
 
         if (testToUpdate.isPresent()) {
-            System.out.print("Enter new category for the test: ");
-            String updatedCategory = scanner.nextLine();
-            int updatedMaxScore = Main.getValidInt("Enter new max score for the test: ");
+            String updatedCategory = Main.getValidString("Enter new category for the test: ");
 
             Test test = testToUpdate.get();
             test.setCategory(updatedCategory);
-            test.setMaxScore(updatedMaxScore);
 
             if (testRepo.mergeTestToDatabase(test)) {
                 System.out.println("Test was updated in the database");

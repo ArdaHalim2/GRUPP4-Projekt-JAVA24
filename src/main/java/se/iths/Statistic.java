@@ -8,14 +8,12 @@ import java.util.*;
 
 public class Statistic {
 
-    private Scanner scanner;
     private Student currentStudent;
     private TestRepo testRepo = new TestRepo();
     private StudentRepo studentRepo = new StudentRepo();
 
 
-    public Statistic(Scanner scanner, Student currentStudent) {
-        this.scanner = scanner;
+    public Statistic(Student currentStudent) {
         this.currentStudent = currentStudent;
     }
 
@@ -39,9 +37,7 @@ public class Statistic {
                     \t3. Show average quiz result per quiz category
                     \t0. Go back to main menu""");
 
-            System.out.print("\tEnter your choice: ");
-            String userChoice = scanner.nextLine();
-            System.out.println();
+            String userChoice = Main.getValidString("\tEnter your choice: ");
 
             switch (userChoice) {
                 case "1" -> showTopFiveTestResultsByCategory();

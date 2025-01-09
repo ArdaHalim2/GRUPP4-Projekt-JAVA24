@@ -45,19 +45,17 @@ public class Quiz {
 
             System.out.println("""
                     
-                    QUIZ MENU
-                    Choose quiz category:
+                    \tQUIZ MENU
+                    \tChoose quiz category:
                     
-                    1. Capitals
-                    2. Lakes
-                    3. Cities
-                    0. Go back to main menu""");
+                    \t1. Capitals
+                    \t2. Lakes
+                    \t3. Cities
+                    \t0. Go back to main menu""");
 
-            System.out.print("Enter your choice: ");
-            String userChoice = scanner.nextLine();
-            System.out.println();
+            String userInput = Main.getValidString("\tEnter your choice: ");
 
-            switch (userChoice) {
+            switch (userInput) {
                 case "1" -> getCapitalQuestions(5);
                 case "2" -> getLakeQuestions(5);
                 case "3" -> getCityQuestions(5);
