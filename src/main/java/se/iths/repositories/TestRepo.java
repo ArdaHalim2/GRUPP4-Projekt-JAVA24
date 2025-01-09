@@ -1,8 +1,6 @@
 package se.iths.repositories;
 
 import static se.iths.repositories.JPAUtil.*;
-
-import jakarta.persistence.EntityManager;
 import se.iths.entity.Test;
 import se.iths.entity.Student;
 import java.util.List;
@@ -22,14 +20,27 @@ public class TestRepo {
         }
     }
 
-    public Optional<List<Test>> getAllTestsByCategoryFromDatabase(String category) {
+    public Optional<List<Test>> getAmountOfTestsByCategoryOrderedByStudentScoreDescFromDatabase(String category, int amount) {
         try {
             var allTestsList = getEntityManager()
-                    .createQuery("SELECT t FROM Test t WHERE t.category = :category", Test.class)
+                    .createQuery("SELECT t FROM Test t WHERE t.category = :category ORDER BY t.studentScore DESC", Test.class)
                     .setParameter("category", category)
+                    .setMaxResults(amount)
                     .getResultList();
 
             return Optional.ofNullable(allTestsList);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<List<String>> getDistinctCategoriesFromDatabase() {
+        try {
+            var allCategoriesList = getEntityManager()
+                    .createQuery("SELECT DISTINCT t.category FROM Test t", String.class)
+                    .getResultList();
+
+            return Optional.ofNullable(allCategoriesList);
         } catch (Exception e) {
             return Optional.empty();
         }
