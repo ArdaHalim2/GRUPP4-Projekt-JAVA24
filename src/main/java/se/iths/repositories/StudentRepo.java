@@ -18,7 +18,7 @@ public class StudentRepo {
     public Optional<List<Student>> getAllStudentsFromDatabase() {
         try {
             var allStudentsList = getEntityManager()
-                    .createQuery("SELECT s FROM Student s JOIN FETCH s.tests", Student.class)
+                    .createQuery("SELECT s FROM Student s LEFT JOIN FETCH s.tests", Student.class)
                     .getResultList();
 
             return Optional.ofNullable(allStudentsList);

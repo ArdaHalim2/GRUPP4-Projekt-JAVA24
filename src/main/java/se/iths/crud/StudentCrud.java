@@ -1,7 +1,9 @@
 package se.iths.crud;
 
+import se.iths.Main;
 import se.iths.entity.Student;
 import se.iths.repositories.StudentRepo;
+
 import java.util.Scanner;
 
 public class StudentCrud {
@@ -59,9 +61,7 @@ public class StudentCrud {
     }
 
     public void updateStudent() {
-        System.out.print("Enter the id of the student you want to update: ");
-        int studentId = scanner.nextInt();
-        scanner.nextLine();
+        int studentId = Main.getValidInt("Enter the id of the student you want to update: ");
 
         var studentToUpdate = studentRepo.getStudentByIdFromDatabase(studentId);
 
@@ -78,14 +78,13 @@ public class StudentCrud {
                 System.out.println("Student was not updated in the database");
             }
         } else {
-            System.out.println("No student was found wit the id: " + studentId);
+            System.out.println("No student was found with the id: " + studentId);
         }
     }
 
+
     public void deleteStudent() {
-        System.out.print("Enter the id of the student you want to delete: ");
-        int idToDelete = scanner.nextInt();
-        scanner.nextLine();
+        int idToDelete = Main.getValidInt("Enter the id of the student you want to delete: ");
 
         var studentToDelete = studentRepo.getStudentByIdFromDatabase(idToDelete);
 
@@ -99,6 +98,7 @@ public class StudentCrud {
             System.out.println("No student was found with the id: " + idToDelete);
         }
     }
+
 
     public void showAllStudents() {
         System.out.println("---- List of All Students ----");

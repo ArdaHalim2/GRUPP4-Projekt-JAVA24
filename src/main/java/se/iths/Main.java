@@ -3,6 +3,7 @@ package se.iths;
 import se.iths.crud.*;
 import se.iths.entity.*;
 import se.iths.repositories.*;
+
 import java.util.Scanner;
 
 public class Main {
@@ -22,9 +23,9 @@ public class Main {
 
         while (runMenu) {
             System.out.println("""
-                
+                    
                     \tSTART MENU
-                
+                    
                     \t1. Log in
                     \t2. Edit
                     \t3. Take Quiz
@@ -48,10 +49,7 @@ public class Main {
     }
 
     private static void logInUser() {
-
-        System.out.print("Enter your user id: ");
-        int userId = scanner.nextInt();
-        scanner.nextLine();
+        int userId = getValidInt("Enter your user id: ");
 
         var student = studentRepo.getStudentByIdFromDatabase(userId);
 
@@ -65,25 +63,25 @@ public class Main {
 
     private static void crudMenu() {
 
-        if(currentStudent == null){
+        if (currentStudent == null) {
             System.out.println("Login required.");
             return;
         }
 
         boolean runMenu = true;
 
-        while(runMenu) {
+        while (runMenu) {
             System.out.println("""
-                
-                CRUD ENTITIES
-                Choose which one to edit:
-                
-                1. Student
-                2. Test
-                3. Country
-                4. City
-                5. Lake
-                0. Go back to main menu""");
+                    
+                    CRUD ENTITIES
+                    Choose which one to edit:
+                    
+                    1. Student
+                    2. Test
+                    3. Country
+                    4. City
+                    5. Lake
+                    0. Go back to main menu""");
 
             System.out.print("Enter your choice: ");
             String userAnswer = scanner.nextLine();
@@ -97,6 +95,17 @@ public class Main {
                 case "5" -> new LakeCrud(scanner).lakeCrudMenu();
                 case "0" -> runMenu = false;
                 default -> System.out.println("Invalid menu choice. Please try again.");
+            }
+        }
+    }
+
+    public static int getValidInt(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please try again.");
             }
         }
     }

@@ -1,5 +1,6 @@
 package se.iths.crud;
 
+import se.iths.Main;
 import se.iths.entity.Country;
 import se.iths.repositories.CountryRepo;
 
@@ -61,9 +62,7 @@ public class CountryCrud {
     }
 
     public void updateCountry() {
-        System.out.print("Enter the id of the country you want to update: ");
-        int countryId = scanner.nextInt();
-        scanner.nextLine();
+        int countryId = Main.getValidInt("Enter the id of the country you want to update: ");
 
         var countryToUpdate = countryRepo.getCountryByIdFromDatabase(countryId);
 
@@ -87,10 +86,9 @@ public class CountryCrud {
         }
     }
 
+
     public void deleteCountry() {
-        System.out.print("Enter the id of the country you want to delete: ");
-        int countryId = scanner.nextInt();
-        scanner.nextLine();
+        int countryId = Main.getValidInt("Enter the id of the country you want to delete: ");
 
         var countryToDelete = countryRepo.getCountryByIdFromDatabase(countryId);
 
@@ -104,6 +102,7 @@ public class CountryCrud {
             System.out.println("No country was found with id: " + countryId);
         }
     }
+
 
     public void showAllCountries() {
         System.out.println("---- List of All Countries ----");

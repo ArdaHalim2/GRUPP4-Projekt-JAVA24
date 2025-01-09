@@ -1,5 +1,6 @@
 package se.iths.crud;
 
+import se.iths.Main;
 import se.iths.entity.City;
 import se.iths.repositories.CityRepo;
 import se.iths.repositories.CountryRepo;
@@ -70,34 +71,29 @@ public class CityCrud {
     }
 
     public void updateCity() {
-
-        System.out.print("Enter the id of the city you want to update: ");
-        int cityId = scanner.nextInt();
-        scanner.nextLine();
+        int cityId = Main.getValidInt("Enter city id for the city to update: ");
 
         var cityToUpdate = cityRepo.getCityByIdFromDatabase(cityId);
 
         if (cityToUpdate.isPresent()) {
-            System.out.print("Enter new name for the city: ");
-            String updateCityName = scanner.nextLine();
+            System.out.println("Enter the new city name: ");
+            String updatedCityName = scanner.nextLine();
 
             City city = cityToUpdate.get();
-            city.setName(updateCityName);
+            city.setName(updatedCityName);
 
             if (cityRepo.mergeCityInDatabase(city)) {
-                System.out.println("City was updated in the database");
+                System.out.println("City was updated.");
             } else {
-                System.out.println("City was not updated in the database");
+                System.out.println("City was not updated.");
             }
         } else {
-            System.out.println("No city was found with id: " + cityId);
+            System.out.println("City with id: " + cityId + " was not found.");
         }
     }
 
     public void deleteCity() {
-        System.out.print("Enter the id of the city you want to delete: ");
-        int idToDelete = scanner.nextInt();
-        scanner.nextLine();
+        int idToDelete = Main.getValidInt("Enter the id of the city you want to delete: ");
 
         var cityToDelete = cityRepo.getCityByIdFromDatabase(idToDelete);
 
@@ -111,6 +107,7 @@ public class CityCrud {
             System.out.println("No city was found with id: " + idToDelete);
         }
     }
+
 
     public void showAllCities() {
         System.out.println("---- List of All Cities ----");

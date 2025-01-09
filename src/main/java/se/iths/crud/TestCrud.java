@@ -1,5 +1,6 @@
 package se.iths.crud;
 
+import se.iths.Main;
 import se.iths.entity.Test;
 import se.iths.repositories.TestRepo;
 import se.iths.repositories.StudentRepo;
@@ -84,18 +85,14 @@ public class TestCrud {
     }
 
     public void updateTest() {
-        System.out.print("Enter the id of the test you want to update: ");
-        int testId = scanner.nextInt();
-        scanner.nextLine();
+        int testId = Main.getValidInt("Enter the id of the test you want to update: ");
 
         var testToUpdate = testRepo.getTestByIdFromDatabase(testId);
 
         if (testToUpdate.isPresent()) {
             System.out.print("Enter new category for the test: ");
             String updatedCategory = scanner.nextLine();
-            System.out.print("Enter new max score for the test: ");
-            int updatedMaxScore = scanner.nextInt();
-            scanner.nextLine();
+            int updatedMaxScore = Main.getValidInt("Enter new max score for the test: ");
 
             Test test = testToUpdate.get();
             test.setCategory(updatedCategory);
@@ -111,10 +108,9 @@ public class TestCrud {
         }
     }
 
+
     public void deleteTest() {
-        System.out.print("Enter the id of the test you want to delete: ");
-        int testId = scanner.nextInt();
-        scanner.nextLine();
+        int testId = Main.getValidInt("Enter the id of the test you want to delete: ");
 
         var testToDelete = testRepo.getTestByIdFromDatabase(testId);
 
@@ -128,6 +124,7 @@ public class TestCrud {
             System.out.println("No test was found with id: " + testId);
         }
     }
+
 
     public void showAllTests() {
         System.out.println("---- List of All Tests ----");

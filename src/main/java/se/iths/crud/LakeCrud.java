@@ -1,8 +1,10 @@
 package se.iths.crud;
 
+import se.iths.Main;
 import se.iths.entity.Lake;
 import se.iths.repositories.CountryRepo;
 import se.iths.repositories.LakeRepo;
+
 import java.util.Scanner;
 
 public class LakeCrud {
@@ -53,7 +55,7 @@ public class LakeCrud {
 
         var lakeCountry = new CountryRepo().getCountryByIdFromDatabase(countryId);
 
-        if(lakeCountry.isPresent()){
+        if (lakeCountry.isPresent()) {
             System.out.print("Enter lake name: ");
             String lakeName = scanner.nextLine();
 
@@ -70,9 +72,7 @@ public class LakeCrud {
     }
 
     public void updateLake() {
-        System.out.print("Enter the id of the lake you want to update: ");
-        int lakeId = scanner.nextInt();
-        scanner.nextLine(); // Rensa scanner
+        int lakeId = Main.getValidInt("Enter the id of the lake you want to update: ");
 
         var lakeToUpdate = lakeRepo.getLakeByIdFromDatabase(lakeId);
 
@@ -93,10 +93,9 @@ public class LakeCrud {
         }
     }
 
+
     public void deleteLake() {
-        System.out.print("Enter the id of the lake you want to delete: ");
-        int lakeId = scanner.nextInt();
-        scanner.nextLine(); // Rensa scanner
+        int lakeId = Main.getValidInt("Enter the id of the lake you want to delete: ");
 
         var lakeToDelete = lakeRepo.getLakeByIdFromDatabase(lakeId);
 
@@ -110,6 +109,7 @@ public class LakeCrud {
             System.out.println("No lake found with id: " + lakeId);
         }
     }
+
 
     public void showAllLakes() {
         System.out.println("---- List of All Lakes ----");
