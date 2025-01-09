@@ -100,7 +100,6 @@ public class Quiz {
                     studentScore++;
                 }
             }
-
             createNewTestAndAddToStudentAndToDatabase("lakes", amountOfQuestions, studentScore);
         }
 
@@ -142,7 +141,8 @@ public class Quiz {
         Test test = new Test(category, maxScore, studentScore, LocalDate.now(), currentStudent);
 
         if (testRepo.persistTestToDatabase(test)) {
-            System.out.println("Test was added to the database!\n");
+            System.out.println("You got " + studentScore + " points out of " + maxScore + " on " + category + ".");
+            System.out.println("Test was added to the database! test id: " + test.getId() +  "\n");
         } else {
             System.out.println("Test was not added to the database!\n");
         }

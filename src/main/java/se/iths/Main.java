@@ -24,7 +24,7 @@ public class Main {
         while (runMenu) {
             System.out.println("""
                     
-                    \tSTART MENU 
+                    \tSTART MENU
                     
                     \t1. Log in
                     \t2. Edit
