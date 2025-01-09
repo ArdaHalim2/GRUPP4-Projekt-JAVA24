@@ -127,11 +127,11 @@ public class Quiz {
 
 
     private boolean checkForRightAnswer(String userAnswer, String rightAnswer) {
-        if (userAnswer.equals(rightAnswer)) {
+        if (userAnswer.trim().equalsIgnoreCase(rightAnswer.trim())) { // Trim för att ta bort oönskade mellanslag
             System.out.println("Right answer!\n");
             return true;
         } else {
-            System.out.println("Wrong answer!\n");
+            System.out.println("Wrong answer! The correct answer is: " + rightAnswer + "\n");
             return false;
         }
     }
