@@ -4,16 +4,9 @@ import se.iths.Main;
 import se.iths.entity.Country;
 import se.iths.repositories.CountryRepo;
 
-import java.util.Scanner;
-
 public class CountryCrud {
 
     private final CountryRepo countryRepo = new CountryRepo();
-    private Scanner scanner;
-
-    public CountryCrud(Scanner scanner) {
-        this.scanner = scanner;
-    }
 
     public void countryCrudMenu() {
 
@@ -23,17 +16,15 @@ public class CountryCrud {
 
             System.out.println("""
                     
-                    CRUD COUNTRY
+                    \tCRUD COUNTRY
                     
-                    1. Add Country
-                    2. Update Country
-                    3. Delete Country
-                    4. Show all countries
-                    0. Go back to edit menu""");
+                    \t1. Add Country
+                    \t2. Update Country
+                    \t3. Delete Country
+                    \t4. Show all countries
+                    \t0. Go back to edit menu""");
 
-            System.out.print("Enter your choice: ");
-            String userAnswer = scanner.nextLine();
-            System.out.println();
+            String userAnswer = Main.getValidString("\tEnter your choice: ");
 
             switch (userAnswer) {
                 case "1" -> addCountry();
@@ -47,10 +38,8 @@ public class CountryCrud {
     }
 
     public void addCountry() {
-        System.out.print("Enter country name: ");
-        String countryName = scanner.nextLine();
-        System.out.print("Enter country capital: ");
-        String countryCapital = scanner.nextLine();
+        String countryName = Main.getValidString("Enter country name: ");
+        String countryCapital = Main.getValidString("Enter country capital: ");
 
         Country country = new Country(countryName, countryCapital);
 
@@ -67,10 +56,8 @@ public class CountryCrud {
         var countryToUpdate = countryRepo.getCountryByIdFromDatabase(countryId);
 
         if (countryToUpdate.isPresent()) {
-            System.out.print("Enter new name for the country: ");
-            String updateCountryName = scanner.nextLine();
-            System.out.print("Enter new capital for the country: ");
-            String updateCountryCapital = scanner.nextLine();
+            String updateCountryName = Main.getValidString("Enter new name for the country: ");
+            String updateCountryCapital = Main.getValidString("Enter new capital for the country: ");
 
             Country country = countryToUpdate.get();
             country.setName(updateCountryName);

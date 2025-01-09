@@ -5,16 +5,9 @@ import se.iths.entity.City;
 import se.iths.repositories.CityRepo;
 import se.iths.repositories.CountryRepo;
 
-import java.util.Scanner;
-
 public class CityCrud {
 
     private final CityRepo cityRepo = new CityRepo();
-    private Scanner scanner;
-
-    public CityCrud(Scanner scanner) {
-        this.scanner = scanner;
-    }
 
     public void cityCrudMenu() {
 
@@ -23,17 +16,15 @@ public class CityCrud {
         while (runMenu) {
             System.out.println("""
                     
-                    CRUD CITY
+                    \tCRUD CITY
                     
-                    1. Add City
-                    2. Update City
-                    3. Delete City
-                    4. Show all cities
-                    0. Go back to edit menu""");
+                    \t1. Add City
+                    \t2. Update City
+                    \t3. Delete City
+                    \t4. Show all cities
+                    \t0. Go back to edit menu""");
 
-            System.out.print("Enter your choice: ");
-            String userAnswer = scanner.nextLine();
-            System.out.println();
+            String userAnswer = Main.getValidString("\tEnter your choice: ");
 
             switch (userAnswer) {
                 case "1" -> addCity();
@@ -47,16 +38,12 @@ public class CityCrud {
     }
 
     public void addCity() {
-
-        System.out.print("Enter country id for the city to add: ");
-        int countryId = scanner.nextInt();
-        scanner.nextLine(); // Rensa scanner
+        int countryId = Main.getValidInt("Enter country id for the city to add: ");
 
         var cityCountry = new CountryRepo().getCountryByIdFromDatabase(countryId);
 
         if (cityCountry.isPresent()) {
-            System.out.print("Enter city name: ");
-            String cityName = scanner.nextLine();
+            String cityName = Main.getValidString("Enter city name: ");
 
             City city = new City(cityName, cityCountry.get());
 
@@ -76,8 +63,7 @@ public class CityCrud {
         var cityToUpdate = cityRepo.getCityByIdFromDatabase(cityId);
 
         if (cityToUpdate.isPresent()) {
-            System.out.println("Enter the new city name: ");
-            String updatedCityName = scanner.nextLine();
+            String updatedCityName = Main.getValidString("Enter the new city name: ");
 
             City city = cityToUpdate.get();
             city.setName(updatedCityName);
